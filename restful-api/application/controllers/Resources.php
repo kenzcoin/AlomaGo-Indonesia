@@ -19,7 +19,9 @@ class Resources extends REST_Controller {
 		$this->msgRowIsNull = "Data masih kosong!";
 		$this->msgInputSuccess = 'Berhasil input data!';
 	}
-
+	public function testRunOnReceive(){
+		echo "test";
+	}
 	public function index_get($action = '')
 	{
 		$this->token = $this->get('token');
