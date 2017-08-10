@@ -18,178 +18,624 @@ class Resources extends REST_Controller {
 		$this->msgMethodNotAllowed = "Metode salah atau tidak ditemukan!";
 		$this->msgRowIsNull = "Data masih kosong!";
 		$this->msgInputSuccess = 'Berhasil input data!';
+		$this->msgNotAuthorized = 'You\'re not authorized!';
 	}
 
-	public function index_get($action = '')
+	public function index_get($action = '' , $method = '')
 	{
-		$this->token = $this->get('token');
-		$this->role = 'user';
-		$authToken = authToken($this->role , $this->token);
-		if ( $action != null)
+		$this->token = $this->get('auth');
+		$this->role = 'authentication';
+		$auth = authToken($this->role , $this->token);
+		switch( trimLower($action))
 		{
+			/* Public */
+			case 'public';
+				switch( trimLower($method))
+				{
+					case 'kabar-burung':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							if ( ! $this->input->get('method'))
+							{
+								$response = array(
+										'return' => false,
+										'error_message' => $this->msgErrorParameter
+									);
+							}
+							else
+							{
+								switch( trimLower($this->input->get('method')))
+								{
+									case 'list':
+										$query = $this->db
+										->from('berita')
+										->order_by('tanggal_waktu DESC')
+										->get();
 
-			if ( ! $this->token)
-			{
+										$row = $query->num_rows();
+
+										if ( $row > 0)
+										{
+											$result = null;
+
+											foreach($query->result() as $data)
+											{
+												$result[] = array(
+														'judul' => $data->judul,
+														'gambar' => $data->gambar,
+														'content' => $data->content,
+														'author' => $data->author,
+														'slug' => $data->slug,
+														'dilihat' => $data->dilihat,
+														'tanggal_waktu' => array(
+																'timestamp' => strtotime($data->tanggal_waktu),
+																'real_datetime' => $data->tanggal_waktu,
+																'human_datetime' => humantime($data->tanggal_waktu)
+															),
+														'terakhir_diubah' => array(
+																'timestamp' => strtotime($data->terakhir_diubah),
+																'real_datetime' => $data->terakhir_diubah,
+																'human_datetime' => humantime($data->terakhir_diubah)
+															),
+														'key' => $data->key
+													);
+											}
+										}
+
+										$response = array(
+												'return' => $row > 0 ? true : false,
+												$row > 0 ? 'data' : 'error_message' =>
+												$row > 0 ? $result : 'Data not found!'
+											);
+									break;	
+
+									case 'detail':
+										if ( ! $this->input->get('key'))
+										{
+											$response = array(
+													'return' => false,
+													'error_message' => $this->msgErrorParameter
+												);
+										}
+										else
+										{
+											$query = $this->db
+											->from('berita')
+											->where( array('key' => $this->input->get('key')))
+											->order_by('tanggal_waktu DESC')
+											->get();
+
+											$row = $query->num_rows();
+
+											if ( $row > 0)
+											{
+												$result = null;
+
+												foreach($query->result() as $data)
+												{
+													$result = array(
+															'judul' => $data->judul,
+															'gambar' => $data->gambar,
+															'content' => $data->content,
+															'author' => $data->author,
+															'slug' => $data->slug,
+															'dilihat' => $data->dilihat,
+															'tanggal_waktu' => array(
+																	'timestamp' => strtotime($data->tanggal_waktu),
+																	'real_datetime' => $data->tanggal_waktu,
+																	'human_datetime' => humantime($data->tanggal_waktu)
+																),
+															'terakhir_diubah' => array(
+																	'timestamp' => strtotime($data->terakhir_diubah),
+																	'real_datetime' => $data->terakhir_diubah,
+																	'human_datetime' => humantime($data->terakhir_diubah)
+																),
+															'key' => $data->key
+														);
+												}
+											}
+
+											$response = array(
+													'return' => $row > 0 ? true : false,
+													$row > 0 ? 'data' : 'error_message' =>
+													$row > 0 ? $result : 'Data not found!'
+												);
+										}
+									break;
+
+									case 'top':
+										$limit = $this->input->get('limit') ?
+										$this->input->get('limit') : 5;
+
+										$query = $this->db
+										->from('berita')
+										->order_by('dilihat DESC , tanggal_waktu DESC')
+										->limit($limit)
+										->get();
+
+										$row = $query->num_rows();
+
+										if ( $row > 0)
+										{
+											$result = null;
+
+											foreach($query->result() as $data)
+											{
+												$result[] = array(
+														'judul' => $data->judul,
+														'gambar' => $data->gambar,
+														'content' => $data->content,
+														'author' => $data->author,
+														'slug' => $data->slug,
+														'dilihat' => $data->dilihat,
+														'tanggal_waktu' => array(
+																'timestamp' => strtotime($data->tanggal_waktu),
+																'real_datetime' => $data->tanggal_waktu,
+																'human_datetime' => humantime($data->tanggal_waktu)
+															),
+														'terakhir_diubah' => array(
+																'timestamp' => strtotime($data->terakhir_diubah),
+																'real_datetime' => $data->terakhir_diubah,
+																'human_datetime' => humantime($data->terakhir_diubah)
+															),
+														'key' => $data->key
+													);
+											}
+										}
+
+										$response = array(
+												'return' => $row > 0 ? true : false,
+												$row > 0 ? 'data' : 'error_message' =>
+												$row > 0 ? $result : 'Data not found!'
+											);
+									break;
+								}
+							}
+						}
+					break;
+
+					case 'about':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$query = $this->db->get_where('app_info', array(
+									'key' => 'about'
+								));	
+
+							$row = $query->num_rows();
+
+							if ( $row > 0)
+							{
+								$result = null;
+
+								foreach($query->result() as $data)
+								{
+									$result = array(
+											'title' => $data->name,
+											'content' => $data->content,
+											'last_modified' => $data->last_modified
+										);
+								}
+							}
+
+							$response = array(
+									'return' => true,
+									$row > 0 ? 'data' : 'error_message' =>
+									$row > 0 ? $result : 'Data not found!'
+								);
+						}
+					break;
+
+					case 'privacy':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$query = $this->db->get_where('app_info', array(
+									'key' => 'privacy'
+								));	
+
+							$row = $query->num_rows();
+
+							if ( $row > 0)
+							{
+								$result = null;
+
+								foreach($query->result() as $data)
+								{
+									$result = array(
+											'title' => $data->name,
+											'content' => $data->content,
+											'last_modified' => $data->last_modified
+										);
+								}
+							}
+
+							$response = array(
+									'return' => true,
+									$row > 0 ? 'data' : 'error_message' =>
+									$row > 0 ? $result : 'Data not found!'
+								);
+						}
+					break;
+
+					case 'disclaimer':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$query = $this->db->get_where('app_info', array(
+									'key' => 'disclaimer'
+								));	
+
+							$row = $query->num_rows();
+
+							if ( $row > 0)
+							{
+								$result = null;
+
+								foreach($query->result() as $data)
+								{
+									$result = array(
+											'title' => $data->name,
+											'content' => $data->content,
+											'last_modified' => $data->last_modified
+										);
+								}
+							}
+
+							$response = array(
+									'return' => true,
+									$row > 0 ? 'data' : 'error_message' =>
+									$row > 0 ? $result : 'Data not found!'
+								);
+						}
+					break;
+
+					case 'feedback':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$query = $this->db
+							->from('feedback')
+							->order_by('tanggal_waktu DESC')
+							->get();
+
+							$row = $query->num_rows();
+
+							if ( $row > 0)
+							{
+								$result = null;
+
+								foreach($query->result() as $data)
+								{
+									$result[] = array(
+											'nama' => $data->nama,
+											'pesan' => $data->pesan,
+											'tanggal_waktu' => array(
+													'timestamp' => strtotime($data->tanggal_waktu),
+													'real_datetime' => $data->tanggal_waktu,
+													'human_datetime' => humantime($data->tanggal_waktu)
+												)
+										);
+								}
+							}
+
+							$response = array(
+									'return' => true,
+									$row > 0 ? 'data' : 'error_message' =>
+									$row > 0 ? $result : 'Data not found!'
+								);
+						}
+
+					break;
+
+					default:
+						$response = array(
+								'return' => false,
+								'error_message' => $this->msgErrorParameter
+							);
+					break;
+				}
+			break;
+
+			default:
 				$response = array(
 						'return' => false,
-						'error_message' => $this->msgErrorToken
+						'error_message' => $this->msgErrorParameter
 					);
-			}
-			else
-			{
-				switch( trimLower($action))
+			break;
+		}
+
+		$this->response($response);
+	}
+
+	public function index_post($action = '' , $method = '')
+	{
+		$this->token = $this->post('auth');
+		$this->role = 'authentication';
+		$auth = authToken($this->role , $this->token);
+		
+		$postdata = array(
+				'username' => $this->post('username'),
+				'password' => $this->post('password'),
+				'method' => $this->post('method'),
+				'title' => $this->post('title'),
+				'content' => $this->post('content')
+			);
+
+		switch( trimLower($action))
+		{
+			case 'public':
+				switch( trimLower($method))
 				{
-					case 'user':
-						$role = $this->get('role');
-
-						if ( ! $role)
+					case 'about':
+						if ( ! $this->token)
 						{
 							$response = array(
 									'return' => false,
-									'error_message' => $this->msgErrorParameter
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						elseif ( ! $auth)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						elseif ( ! $postdata['method'])
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgFieldNull
 								);
 						}
 						else
 						{
-							switch( trimLower($role))
-							{
-								case 'user':
-									if ( ! $authToken)
-									{
-										$response = array(
-												'return' => false,
-												'error_message' => $this->msgWrongToken
-											);
-									}
-									else
-									{
-										$response = array(
-												'return' => true,
-												'data' => $authToken
-											);
-									}
-								break;
+							$listMethod = array('update');
 
-								case 'admin':
-									$this->role = 'admin';
-									if ( ! $authToken)
-									{
-										$response = array(
-												'return' => false,
-												'error_message' => $this->msgWrongToken
+							if ( ! in_array($postdata['method'], $listMethod))
+							{
+								$response = array(
+										'return' => false,
+										'error_message' => $this->msgMethodNotAllowed
+									);
+							}
+							else
+							{
+								switch($postdata['method'])
+								{
+									case 'update':
+										$data = $this->db->get_where('app_info' , array('key' => 'about'))->result()[0];
+
+										$title = ( $postdata['title']) ? trim($postdata['title']) : $data->name;
+										$content = ( $postdata['content']) ? 
+												trim(nl2br($postdata['content'])) : $data->content;
+
+										$dataUpdate = array(
+												'name' => $title,
+												'content' => $content,
+												'last_modified' => date('Y-m-d H:i:s')
 											);
-									}
-									else
-									{
+
+										$this->db->set($dataUpdate);
+										$this->db->where( array('key' => 'about'));
+										$this->db->update('app_info');
+
 										$response = array(
 												'return' => true,
-												'data' => $authToken
+												'message' => 'Berhasil mengubah data!',
 											);
-									}
-								break;
+									break;
+								}
 							}
-							
 						}
 					break;
 
-					case 'berita':
-						if ( ! $authToken)
+					case 'disclaimer':
+						if ( ! $this->token)
 						{
 							$response = array(
 									'return' => false,
-									'error_message' => $this->msgWrongToken
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						elseif ( ! $auth)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						elseif ( ! $postdata['method'])
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgFieldNull
 								);
 						}
 						else
 						{
-							$query = $this->db->get('berita');
+							$listMethod = array('update');
 
-							$data = array();
-
-							foreach($query->result() as $row)
+							if ( ! in_array($postdata['method'], $listMethod))
 							{
-								$data[] = array(
-										'id' => $row->id,
-										'judul' => $row->judul,
-										'content' => $row->content,
-										'author' => $row->author,
-										'slug' => $row->slug,
-										'tanggal_berita' => $row->tanggal_waktu,
-										'terakhir_diubah' => $row->terakhir_diubah,
+								$response = array(
+										'return' => false,
+										'error_message' => $this->msgMethodNotAllowed
 									);
 							}
+							else
+							{
+								switch($postdata['method'])
+								{
+									case 'update':
+										$data = $this->db->get_where('app_info' , array('key' => 'disclaimer'))->result()[0];
 
-							$num = $query->num_rows() > 0;
+										$title = ( $postdata['title']) ? trim($postdata['title']) : $data->name;
+										$content = ( $postdata['content']) ? 
+												trim(nl2br($postdata['content'])) : $data->content;
 
-							$response = array(
-									'return' => $num ? true : false,
-									$num ? 'data' : 'error_message' 
-									=> $num ? $query->result() : $this->msgRowIsNull
-								);
+										$dataUpdate = array(
+												'name' => $title,
+												'content' => $content,
+												'last_modified' => date('Y-m-d H:i:s')
+											);
+
+										$this->db->set($dataUpdate);
+										$this->db->where( array('key' => 'disclaimer'));
+										$this->db->update('app_info');
+
+										$response = array(
+												'return' => true,
+												'message' => 'Berhasil mengubah data!',
+											);
+									break;
+								}
+							}
 						}
 					break;
 
-					case 'transaksi':
-						if ( ! $authToken)
+					case 'privacy':
+						if ( ! $this->token)
 						{
 							$response = array(
 									'return' => false,
-									'error_message' => $this->msgWrongToken
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						elseif ( ! $auth)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						elseif ( ! $postdata['method'])
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgFieldNull
 								);
 						}
 						else
 						{
-							$listMetode = array('lastweek' , 'last','all');
+							$listMethod = array('update');
 
-							$this->metodeTransaksi = $this->get('method');
-							$userdata = $authToken;
-							
-							/* Seleksi semua data terbaru */
-							$queryAll = $this->db->from('transaksi')
-							->where( array('id_user' => $userdata['id']))
-							->order_by('tanggal_waktu DESC')
-							->get();
-							/* Seleksi semua data terbaru */
-
-							/* Seleksi semua data terbaru per minggu terakhir */
-							$sqlLastWeek = "SELECT * FROM transaksi WHERE 
-							tanggal_waktu BETWEEN date_sub(now(), INTERVAL 1 WEEK) 
-							and now() ORDER BY tanggal_waktu DESC";
-							$queryLastWeek = $this->db->query($sqlLastWeek);
-							/* Seleksi semua data terbaru per minggu terakhir */
-
-							/* Seleksi satu data terbaru dari transaksi */
-							$queryLast = $this->db->from('transaksi')
-							->where( array('id_user' => $userdata['id']))
-							->order_by('tanggal_waktu DESC')
-							->limit(1)
-							->get();
-							/* Seleksi satu data terbaru dari transaksi */
-
-							$data = array();
-
-							$isQuery = ($this->metodeTransaksi == 'all') ? $queryAll->result() 
-							: ( $this->metodeTransaksi == 'lastweek' ? $queryLastWeek->result() : $queryLast->result());
-
-							foreach($isQuery as $row)
+							if ( ! in_array($postdata['method'], $listMethod))
 							{
-								$data[] = array(
-										'id' => $row->id,
-										'id_bpjs' => $row->id_bpjs,
-										'id_pln' => $row->id_pln,
-										'nomer_tujuan' => $row->nomer_tujuan,
-										'no_hp' => $row->no_hp,
-										'tipe' => $row->tipe,
-										'nominal' => $row->nominal,
-										'tanggal_waktu' => $row->tanggal_waktu
+								$response = array(
+										'return' => false,
+										'error_message' => $this->msgMethodNotAllowed
 									);
 							}
+							else
+							{
+								switch($postdata['method'])
+								{
+									case 'update':
+										$data = $this->db->get_where('app_info' , array('key' => 'privacy'))->result()[0];
 
-							$isMetode = ( in_array($this->metodeTransaksi, $listMetode));
+										$title = ( $postdata['title']) ? trim($postdata['title']) : $data->name;
+										$content = ( $postdata['content']) ? 
+												trim(nl2br($postdata['content'])) : $data->content;
+
+										$dataUpdate = array(
+												'name' => $title,
+												'content' => $content,
+												'last_modified' => date('Y-m-d H:i:s')
+											);
+
+										$this->db->set($dataUpdate);
+										$this->db->where( array('key' => 'privacy'));
+										$this->db->update('app_info');
+
+										$response = array(
+												'return' => true,
+												'message' => 'Berhasil mengubah data!',
+											);
+									break;
+								}
+							}
+						}
+					break;
+
+					default:
+						$response = array(
+								'return' => false,
+								'error_message' => $this->msgErrorParameter
+							);
+					break;
+				}
+			break;
+
+			case 'admin':
+				switch( trimLower($method))
+				{
+					case 'login':
+						if ( ! $postdata['username'] || ! $postdata['password'])
+						{
 							$response = array(
-									'return' => $isMetode ? 'true' : 'false',
-									$isMetode ? 'data' : 'error_message' 
-									=> $isMetode ? $data : $this->msgMethodNotAllowed
+									'return' => false,
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						else
+						{
+							$query = $this->db->get_where('administrator' , array(
+									'username' => $postdata['username'],
+									'password' => md5($postdata['password'])
+								));
+
+							$num = $query->num_rows();
+
+							if ( $num > 0)
+							{
+								foreach($query->result() as $row)
+								{
+									$result = array(
+											'nama' => $row->nama,
+											'username' => $row->username,
+											'foto_profil' => $row->foto_profil,
+											'token' => $row->token
+										);
+								}
+							}
+
+							$response = array(
+									'return' => $num > 0 ? true : false,
+									$num > 0 ? 'data' : 'error_message' => 
+									$num > 0 ? $result : 'Username atau Password salah!'
 								);
 						}
 					break;
@@ -201,248 +647,13 @@ class Resources extends REST_Controller {
 							);
 					break;
 				}
-			}
-		}
-		else
-		{
-			$response = array(
-					'return' => false,
-					'error_message' => $this->msgErrorParameter
-				);
-		}
-
-		$this->response($response);
-	}
-
-	public function index_post($action = '')
-	{
-		$this->token = $this->post('token');
-		$this->role = 'user';
-		$this->pinIsView = true;
-		$authToken = authToken($this->role , $this->token , $this->pinIsView);
-		switch( trimLower($action))
-		{
-			case 'transaksi':
-				$this->metode = $this->post('metode');
-				$availableMethod = array('transfer_pulsa' , 'tukar_pulsa' , 'beli_pulsa' , 'pembayaran_pln' , 'pembayaran_bpjs');
-
-				$this->responseFailed = array(
-						'return' => false,
-						'error_message' => $this->msgFieldNull
-					); 
-
-				if ( ! $authToken)
-				{
-					$response = array(
-							'return' => false,
-							'error_message' => $this->msgWrongToken
-						);
-				}
-
-				elseif( ! $this->metode)
-				{
-					$response = $this->responseFailed;
-				}
-
-				elseif ( ! in_array($this->metode , $availableMethod))
-				{
-					$response = array(
-						'return' => false,
-						'error_message' => $this->msgMethodNotAllowed
-					);
-				}
-
-				else
-				{
-					$userdata = $authToken;
-					$this->nothing = "nothing";
-					switch ( trimLower($this->metode)) {
-						case 'transfer_pulsa':
-							$postdata = array(
-									'nomer_tujuan' => $this->post('nomer_tujuan'),
-									'nominal' => $this->post('nominal')
-								);
-
-							if ( ! $postdata['nomer_tujuan'] || ! $postdata['nominal'])
-							{
-								$response = $this->responseFailed;
-							}
-							else
-							{
-								$data = array(
-										'id_user' => $userdata['id'],
-										'nomer_tujuan' => $postdata['nomer_tujuan'],
-										'nominal' => $postdata['nominal']
-									);
-
-								$this->db->insert('transfer_pulsa' , $data);
-
-								$response = array(
-										'return' => true,
-										'message' => $this->msgInputSuccess
-									);
-							}
-						break;
-
-						case 'tukar_pulsa':
-							$postdata = array(
-									'nomer_rekening' => $this->post('nomer_rekening'),
-									'bank' => $this->post('bank'),
-									'nominal' => $this->post('nominal')
-								);
-
-							if ( ! $postdata['nomer_rekening'] || ! $postdata['bank'] || ! $postdata['nominal'])
-							{
-								$response = $this->responseFailed;
-							}
-							else
-							{
-								$data = array(
-										'id_user' => $userdata['id'],
-										'nomer_rekening' => $postdata['nomer_rekening'],
-										'bank' => $postdata['bank'],
-										'nominal' => $postdata['nominal']
-									);
-
-								$this->db->insert('tukar_pulsa' , $data);
-
-								$response = array(
-										'return' => true,
-										'message' => $this->msgInputSuccess
-									);
-							}
-						break;
-
-						case 'beli_pulsa':
-							$postdata = array(
-									'no_tujuan' => $this->post('no_tujuan'),
-									'tipe' => $this->post('tipe'),
-									'nominal' => $this->post('nominal'),
-									'pin' => $this->post('pin')
-								);
-
-							if ( ! $postdata['no_tujuan'] || ! $postdata['tipe'] 
-								|| ! $postdata['nominal'] || ! $postdata['pin'])
-							{
-								$response = $this->responseFailed;
-							}
-							elseif($postdata['pin'] != $userdata['pin'])
-							{
-								$response = array(
-										'return' => false,
-										'error_message' => $this->msgWrongPin
-									);
-							}
-							else
-							{
-								$tipe = strtolower(ucwords($postdata['tipe']));
-
-								$data = array(
-										'id_user' => $userdata['id'],
-										'nomer_tujuan' => $postdata['no_tujuan'],
-										'tipe' => $tipe,
-										'nominal' => $postdata['nominal']
-									);
-
-								$this->db->insert('transaksi' , $data);
-
-								$response = array(
-										'return' => true,
-										'message' => $this->msgInputSuccess
-									);
-							}
-						break;
-
-						case 'pembayaran_pln':
-							$postdata = array(
-									'id_pelanggan' => $this->post('id_pelanggan'),
-									'nominal' => $this->post('nominal'),
-									'pin' => $this->post('pin')
-								);
-
-							if ( ! $postdata['id_pelanggan'] || ! $postdata['pin'] || ! $postdata['nominal'])
-							{
-								$response = $this->responseFailed;
-							}
-							elseif($postdata['pin'] != $userdata['pin'])
-							{
-								$response = array(
-										'return' => false,
-										'error_message' => $this->msgWrongPin
-									);
-							}
-							else
-							{
-								$data = array(
-										'id_user' => $userdata['id'],
-										'id_pln' => $postdata['id_pelanggan'],
-										'tipe' => 'PLN',
-										'nominal' => $postdata['nominal']
-									);
-
-								$this->db->insert('transaksi' , $data);
-
-								$response = array(
-										'return' => true,
-										'message' => $this->msgInputSuccess
-									);
-							}
-						break;
-
-						case 'pembayaran_bpjs':
-							$postdata = array(
-									'id_bpjs' => $this->post('id_bpjs'),
-									'no_hp' => $this->post('no_hp'),
-									'pin' => $this->post('pin'),
-									'nominal' => $this->post('nominal')
-								);
-
-							if ( ! $postdata['id_bpjs'] || ! $postdata['no_hp'] 
-								|| ! $postdata['pin'] || ! $postdata['nominal'])
-							{
-								$response = $this->responseFailed;
-							}
-							elseif($postdata['pin'] != $userdata['pin'])
-							{
-								$response = array(
-										'return' => false,
-										'error_message' => $this->msgWrongPin
-									);
-							}
-							else
-							{
-								$data = array(
-										'id_user' => $userdata['id'],
-										'id_bpjs' => $postdata['id_bpjs'],
-										'no_hp' => $postdata['no_hp'],
-										'tipe' => 'BPJS',
-										'nominal' => $postdata['nominal']
-									);
-
-								$this->db->insert('transaksi' , $data);
-
-								$response = array(
-										'return' => true,
-										'message' => $this->msgInputSuccess
-									);
-							}
-						break;
-						
-						default:
-							$response = array(
-								'return' => false,
-								'error_message' => $this->msgErrorParameter
-							);
-						break;
-					}
-				}
 			break;
 
 			default:
 				$response = array(
-					'return' => false,
-					'error_message' => $this->msgErrorParameter
-				);
+						'return' => false,
+						'error_message' => $this->msgErrorParameter
+					);
 			break;
 		}
 

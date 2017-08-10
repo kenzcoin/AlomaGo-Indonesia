@@ -111,6 +111,13 @@ if ( ! function_exists('authToken'))
 			case 'admin':
 
 			break;
+
+			case 'authentication':
+				$query = $CI->db
+				->get_where('authentication', array('key' => $token));
+
+					return $query->num_rows() > 0 ? true : false;
+			break;
 		}
 	}
 }

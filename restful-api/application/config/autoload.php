@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('aloma_helper');
+$autoload['helper'] = array('aloma_helper','datetime_helper');
 
 /*
 | -------------------------------------------------------------------
