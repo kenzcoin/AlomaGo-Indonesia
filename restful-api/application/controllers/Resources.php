@@ -390,7 +390,9 @@ class Resources extends REST_Controller {
 				'password' => $this->post('password'),
 				'method' => $this->post('method'),
 				'title' => $this->post('title'),
-				'content' => $this->post('content')
+				'content' => $this->post('content'),
+				'key' => $this->post('key'),
+				'author' => $this->post('author')
 			);
 
 		switch( trimLower($action))
@@ -398,6 +400,182 @@ class Resources extends REST_Controller {
 			case 'public':
 				switch( trimLower($method))
 				{
+					case 'kabar-burung':
+						if ( ! $this->token)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgErrorToken
+								);
+						}
+						elseif ( ! $auth)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						elseif ( ! $postdata['method'])
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						else
+						{
+							$listMethod = array('ubah','baru','hapus');
+
+							if ( ! in_array($postdata['method'], $listMethod))
+							{
+								$response = array(
+										'return' => false,
+										'error_message' => $this->msgMethodNotAllowed
+									);
+							}
+							else
+							{
+								switch( trimLower($postdata['method']))
+								{
+									case 'baru':
+										if ( ! $postdata['title'] 
+											|| ! $postdata['content'] || ! $postdata['author'])
+										{
+											$response = array(
+													'return' => false,
+													'error_message' => $this->msgFieldNull
+												);
+										}
+										else
+										{
+											$mimeAccepted = array('image/png','image/jpeg');
+											$extAccepted = array('jpg','png','jpeg');
+											$checkExt = explode('.' , $_FILES['gambar_utama']['name']);
+											$imageMime = checkMime($_FILES['gambar_utama']['name']);
+
+											if ( ! in_array($imageMime, $mimeAccepted) 
+												|| ! in_array(end($checkExt), $extAccepted))
+											{
+												$response = array(
+														'return' => false,
+														'error_message' => 'Maaf, Gambar utama hanya boleh berektensi JPG,JPEG atau PNG'
+													);
+											}
+											else
+											{
+												$checkslug = $this->db->get_where('berita' , 
+													array('slug' => createSlug($postdata['title'])));
+
+												$rowslug = $checkslug->num_rows();
+
+												if ( $rowslug > 0)
+												{
+													$response = array(
+															'return' => false,
+															'error_message' => 'Slug masih ada yang sama, harap ubah Judul'
+														);
+												}
+												else
+												{
+													$destination = 'resources/uploads/';
+													$today = date('Ymd');
+
+													if ( ! is_dir(FCPATH.$destination.$today))
+													{
+														mkdir(FCPATH.$destination.$today);
+													}
+
+													$imageEncrypt = generate_image($_FILES['gambar_utama']['name']);
+													$dirUpload = FCPATH.$destination.$today.'/'.$imageEncrypt;
+													$urlUpload = base_url().$destination.$today.'/'.$imageEncrypt;
+													$data = null;
+													foreach($_FILES['gambar_utama'] as $key => $value)
+													{
+														$data[] = array(
+																$key => $value
+															);
+													}
+
+													move_uploaded_file($_FILES['gambar_utama']['tmp_name'], $dirUpload);
+
+													$key = generate_key();
+													$data = array(
+															'judul' => $postdata['title'],
+															'gambar' => $urlUpload,
+															'content' => $postdata['content'],
+															'author' => $postdata['author'],
+															'slug' => createSlug($postdata['title']),
+															'dilihat' => 0,
+															'key' => $key,
+															'tanggal_waktu' => date('Y-m-d H:i:s'),
+															'terakhir_diubah' => date('Y-m-d H:i:s')
+														);
+
+													// $this->db->insert('berita' , $data);
+
+													$query = $this->db->get_where('berita',  array(
+															'slug' => createSlug($postdata['title']),
+															'key' => $key
+														))->result()[0];
+
+													$response = array(
+															'return' => true,
+															'message' => 'Berhasil menambahkan Kabar Burung',
+															'data' => $query,
+															'v' => $_FILES['gambar_utama'],
+															'uploads' => array(
+																	'dir_upload' => $dirUpload,
+																	'url_upload' => $urlUpload,
+																)
+														);
+												}
+											}
+										}
+									break;
+
+									case 'update':
+										$ubah = array('UPD');
+									break;
+
+									case 'hapus':
+										if ( ! $postdata['key'])
+										{
+											$response = array(
+													'return' => false,
+													'error_message' => $this->msgFieldNull
+												);
+										}
+										else
+										{
+											$query = $this->db->get_where('berita', array(
+													'key' => $postdata['key']
+												));
+
+											$row = $query->num_rows();
+
+											if ( $row > 0)
+											{
+												$this->db->delete('berita' , array('key' => $postdata['key']));
+
+												$response = array(
+														'return' => true,
+														'message' => 'Kabar Burung berhasil dihapus!'
+													);
+											}
+											else
+											{
+												$response = array(
+														'return' => false,
+														'error_message' => 'Kabar Burung tidak ditemukan!'
+													);
+											}
+										}
+									break;
+								}
+							}
+						}	
+					break;
+
 					case 'about':
 						if ( ! $this->token)
 						{

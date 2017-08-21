@@ -31,6 +31,65 @@ class EndpointInterface extends CI_Model {
 		return $result;
 	}
 
+	/* @POST Kabar Burung */
+	public function postKabarBurung($data)
+	{
+		$this->uri = $this->endpointUri.'/public/kabar-burung';
+
+		$endpoint = $this->curl->simple_post($this->uri, $data);
+		$result = json_decode($endpoint);
+
+		return $this->curl->info;
+	}
+
+	private function post_data_parent($active_token, $data_upload, $data_post) {
+    	$result = FALSE;
+    	if(!empty($active_token)) {
+    		$this->uri = $this->endpointUri.'/public/kabar-burung';
+
+    		//preping multipart header
+    		define('MULTIPART_BOUNDARY', '------'.microtime(true));
+    		$header = 'Content-Type: multipart/form-data; boundary='.MULTIPART_BOUNDARY;
+            $content = '';
+
+            if(!empty($data_upload)) {
+                $file_contents = file_get_contents($data_upload['full_path']);
+                //prepping image field
+                $content = "--".MULTIPART_BOUNDARY
+                            ."\r\n"
+                            ."Content-Disposition: form-data; name='gambar'; filename='".$data_upload['orig_name']."'"
+                            ."\r\n"
+                            ."Content-type: ".$data_upload['file_type']
+                            ."\r\n\r\n"
+                            .$file_contents."\r\n";
+            }
+
+    		//prepping post field
+			foreach ($data_post as $key => $value) {
+				$content .= "--".MULTIPART_BOUNDARY."\r\n"
+							."Content-Disposition: form-data; name='".$key."'"
+							."\r\n\r\n"
+							.$value."\r\n";
+			}
+			//signal end of request
+			$content .= "--".MULTIPART_BOUNDARY."--\r\n";
+
+			$context = stream_context_create(array(
+					'http' => array(
+							'method' => 'POST',
+							'header' => $header,
+							'content' => $content
+						)
+				));
+            /*echo "<pre>";
+            echo $header;
+            echo $content;
+            echo "</pre>";*/
+			$result = file_get_contents($this->uri, false, $context);
+    	}
+    	return json_decode($result);
+    }
+
 	/* @$GET Top Kabar Burung */
 	public function getTopKabarBurung($token , $limit = null)
 	{

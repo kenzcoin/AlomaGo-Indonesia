@@ -27,9 +27,6 @@
                       <table class="table table-striped jambo_table bulk_action">
                         <thead>
                           <tr class="headings">
-                            <th>
-                              <input type="checkbox" id="check-all" class="flat">
-                            </th>
                             <th class="column-title">Invoice </th>
                             <th class="column-title">Tanggal Invoice </th>
                             <th class="column-title">No. Penerima </th>
@@ -45,9 +42,6 @@
 
                         <tbody>
                           <tr class="even pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -57,9 +51,6 @@
                             </td>
                           </tr>
                           <tr class="odd pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -69,9 +60,6 @@
                             </td>
                           </tr>
                           <tr class="even pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -81,9 +69,6 @@
                             </td>
                           </tr>
                           <tr class="odd pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -93,9 +78,6 @@
                             </td>
                           </tr>
                           <tr class="even pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -104,9 +86,6 @@
                             <td class="a-right a-right ">25000</td>
                           </tr>
                           <tr class="odd pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                            <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -115,9 +94,6 @@
                             <td class="a-right a-right ">25000</td>
                           </tr>
                           <tr class="even pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -126,9 +102,6 @@
                             <td class="a-right a-right ">25000</td>
                           </tr>
                           <tr class="odd pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -138,9 +111,6 @@
                           </tr>
 
                           <tr class="even pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
@@ -149,9 +119,6 @@
                             <td class="a-right a-right ">25000</td>
                           </tr>
                           <tr class="odd pointer">
-                            <td class="a-center ">
-                              <input type="checkbox" class="flat" name="table_records">
-                            </td>
                             <td class=" ">121000040</td>
                             <td class=" ">May 23, 2014 11:47:56 PM </td>
                             <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>

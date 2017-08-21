@@ -20,6 +20,10 @@
 
     <!-- Custom Theme Style -->
     <link href="<?= resources_url(); ?>build/css/custom.min.css" rel="stylesheet">
+
+    <!-- SweetAlert -->
+    <link rel="stylesheet" type="text/css" href="<?= resources_url(); ?>build/css/sweetalert.css">
+    
   </head>
 
   <body class="nav-md">

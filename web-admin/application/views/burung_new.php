@@ -10,13 +10,13 @@
                 </div>
                 <div class="x_content">
                     <br />
-                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <form action="<?= admin_url()?>do_action?method=new_kabarburung" method="post" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Judul <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="judul" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" id="judul" autocomplete="off" name="title" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                       </div>
 
@@ -24,10 +24,10 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Gambar Utama <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="file" id="gambar-utama" required="required"/>
+                          <input type="file" name="gambar_utama" id="gambarUtama" required="required"/>
+                          <img src="#" id="imagePreview" style="border:1px dashed; padding:15px; margin-top:15px; width:auto; height:300px;">
                         </div>
                       </div>
-                    </form>
                   <div id="alerts"></div>
                   <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor-one">
                     <div class="btn-group">
@@ -98,16 +98,17 @@
                     </div>
                   </div>
 
-                  <div id="editor-one" class="editor-wrapper"></div>
+                  <div id="editor-one" class="editor-wrapper" required></div>
 
-                  <textarea name="descr" id="descr" style="display:none;"></textarea>
+                   <textarea name="content" id="textarea" required style="display:none;"></textarea>
                   
                   <br />
 
                   <div class="ln_solid"></div>
                       <div class="form-group">
-                          <button type="submit" class="btn btn-success">Simpan</button>
+                          <button type="submit" id="saveBtn" class="btn btn-success">Simpan</button>
                         </div>
+                        </form>
                       </div>
                 </div>
               </div>

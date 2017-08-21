@@ -241,6 +241,26 @@ class Admin extends CI_Controller {
 							redirect(admin_url().'privacy');
 						break;
 
+						case 'new_kabarburung':
+							if ( ! $this->input->post() || ! $_FILES)
+							{
+								// Gambar ERROR
+								redirect(admin_url().'kabar-burung?method=new');
+							}
+
+							$data = array(
+									'auth' => $this->authToken,
+									'method' => 'baru',
+									'gambar_utama' => $_FILES['gambar_utama'],
+									'title' => $postdata['title'],
+									'content' => nl2br($postdata['content']),
+									'author' => $this->admin_data->nama
+								);
+
+							$rs = $this->EndpointInterface->postKabarBurung($data);
+							print_r($rs);
+						break;
+
 						default:
 							show_404();
 						break;

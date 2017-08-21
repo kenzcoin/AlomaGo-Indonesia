@@ -62,7 +62,7 @@
                             substr($row[$i]->judul, 0, 15).'...' : substr($row[$i]->judul, 0, 15) ?></td>
                             <td class=" "><?= $row[$i]->author; ?></td>
                             <td class=" "><?= $row[$i]->tanggal_waktu->human_datetime ?></td>
-                            <td class=" last"><a href="#"><i class="fa fa-eye"></i></a> <a href="<?= admin_url(); ?>kabar-burung?method=edit&encrypted=<?= $row[$i]->key; ?>"><i class="fa fa-pencil-square-o"></i></a>  <a href="#"><i class="fa fa-trash"></i></a>
+                            <td class=" last"><a href="<?= admin_url(); ?>kabar-burung?method=edit&encrypted=<?= $row[$i]->key; ?>"><i class="fa fa-pencil-square-o"></i></a>  <a href="#" onclick="deleteKabarBurung('<?= $row[$i]->judul; ?>')"><i class="fa fa-trash"></i></a>
                             </td>
                           </tr>
                           <?php 

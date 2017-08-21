@@ -98,7 +98,7 @@
 
                   <div class="ln_solid"></div>
                       <div class="form-group">
-                          <button type="submit" id="saveBtn"" class="btn btn-success">Simpan</button>
+                          <button type="submit" id="saveBtn" class="btn btn-success">Simpan</button>
                         </div>
                         </form>
                       </div>

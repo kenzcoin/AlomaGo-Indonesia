@@ -44,13 +44,60 @@
     <!-- Custom Theme Scripts -->
     <script src="<?= resources_url(); ?>build/js/custom.min.js"></script>
 
+    <!-- SweetAlert -->
+    <script type="text/javascript" src="<?= resources_url(); ?>build/js/sweetalert.min.js"></script>
+
     <script>
         $(function(){
             $('#saveBtn').click(function () {
                 var mysave = $('#editor-one').html();
                 $('#textarea').val(mysave);
-            });
+            }); 
+
+             $("#imagePreview").hide();
         });
+
+        <?php if ( $this->uri->segment(2) == 'kabar-burung'): ?>
+
+        function deleteKabarBurung(x)
+        {
+            swal({
+              title: "Hapus kabar burung?",
+              text: "<strong>" + x + "</strong> akan dihapus. Jika setuju, klik Ok",
+              type: "warning",
+              html: true,
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "Ok",
+              closeOnConfirm: false,
+              closeButtonText: "Batalkan",
+              showLoaderOnConfirm: true
+            },
+            function(){
+              setTimeout(function(){
+                    swal("Terhapus!", "Kabar burung berhasil dihapus!", "success");
+              }, 2000);
+            });
+        }
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function (e) {
+                    $('#imagePreview').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#gambarUtama").change(function(){
+            readURL(this);
+            $("#imagePreview").show();
+        });
+
+        <?php endif; ?>
     </script>
   </body>
 </html>
