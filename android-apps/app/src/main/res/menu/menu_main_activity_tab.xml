@@ -1,0 +1,49 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.studio.illiyin.alomagoindonesia.MainActivityTab">
+
+
+    <item
+        android:id="@+id/sign_in"
+        android:orderInCategory="100"
+        android:title="@string/sigIn"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/history"
+        android:orderInCategory="100"
+        android:title="@string/history"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/rate"
+        android:orderInCategory="100"
+        android:title="@string/rate"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/tell_friend"
+        android:orderInCategory="100"
+        android:title="@string/tellFriend"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/feedback"
+        android:orderInCategory="100"
+        android:title="@string/feedback"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/disclaimer"
+        android:orderInCategory="100"
+        android:title="@string/disclaimer"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/privacy"
+        android:orderInCategory="100"
+        android:title="@string/privacy"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/about"
+        android:orderInCategory="100"
+        android:title="@string/about"
+        app:showAsAction="never" />
+
+</menu>

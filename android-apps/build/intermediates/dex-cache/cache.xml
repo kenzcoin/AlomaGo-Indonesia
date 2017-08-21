@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/root/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.7.0/9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4/glide-3.7.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/glide-3.7.0_ac342f17260710fcdf4b2d129687098a64b8d47c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/c8f224e39c6bc54d320bcfad750affd945a3272a/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_f5584ab0ac2046164a39f4b93bd498544ec5d3cc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/2b7420446c6d1d867e1fbd3bdd49625f1f52b0e0/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d4cf6227dd6a2ceff0f7dcf0c324380b7abf2c28">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_cb2b6434c3341e5359d4313e476db3cd5e611760.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/2dc98bf830e06dac07dea944d01ea382d2e621b9/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="95519720620b553f63afc789beba9ad582807f7c">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_46b8d5ce835383e79a5792e5ec32e194acced25d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/183491ce4341db86fc9c14d2c2cc61d40e815bc5/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_d7b2cb055e7a9cefd87813a22fde0b3056cdcc7e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/e9e28d356201753b1e159eb9a07fce7f4edfacbd/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4a26a1154d053ab11aaf4c3967c42a4d66390991">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_07ec2fc6994c61ca956de3d93462d85f1be21934.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/32e9d868b2af2cdfb93f826e741adcdc776f814b/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="38789e20ace9ab7dbd00554bd2673ab424478d3b">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_643acbfea09b5b78da152b8577c2c3e8e835165b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/2c04a65e47167c7ab7fa6777c9fefe7289d58ca3/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_5b38de87916e952819cb911c34be50127ff3e6b5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/25.3.1/support-annotations-25.3.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/support-annotations-25.3.1_71603e9186bae46f98999e0a31ed8167b724c574.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/42faaba388c965751328509247592953c051e1ca/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_56cec509303691432df78d825233ed9094875e58.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/6b87f170193b1aa74983d19fe616fd0455e9a3da/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_bf97eb06edc30a88fb2424dd85bd3ba3fcb5495a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/5b9dd47effb38916467e340a0495486d08ff9cc7/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_73afe7943a97441b92a53bb7b7cbd61cd29b3fad.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/5954d56beb5313a882950b5f3b758b17f51488ea/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_57b1f371c635602af33d84c42a35dbf15a595469.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/ddc586c5f6864446b32bcce8f20bf7403cf30e50/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_d2f2502d7512d4034843f608f128e1ac1ac4d40f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/.android/build-cache/233ba28049fd9eca53a0d3487c2f85e6e09d4141/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/classes_3d2ed9eb0aa4227455f3f074207afa63ca471d8c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/root/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/home/sa/Projects/AlomaGo/android-apps/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_76f81077aea9bd1699aabfb9818dc8fa3bde44df.jar" />
+    </item>
+
+</items>
