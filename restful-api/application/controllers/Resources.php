@@ -486,7 +486,7 @@ class Resources extends REST_Controller {
 										$num = $query ? $query->num_rows() : null;
 
 										$response = array(
-												'return' => $query ? true : false,
+												'return' => $num ? true : false,
 												$query ? $num > 0 ? 
 													'data' : 'message'
 												: 'error_message' =>
