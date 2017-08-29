@@ -8,12 +8,14 @@
 
               <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                  </div>
+                    <form method="get">
+                      <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search for..." autocomplete="off">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="submit">Go!</button>
+                        </span>
+                      </div>
+                    </form>
                 </div>
               </div>
             </div>
@@ -44,10 +46,16 @@
                         </thead>
 
                         <tbody>
-                          <?php if ( ! $feedback->return ): ?>
+                          <?php if ( ! $feedback->return && $this->input->get('q')): ?>
+                          <h2 class="text-center">Kata kunci <strong><?= $this->input->get('q')?></strong> untuk pencarian feedback tidak ditemukan</h2>
+                          <?php elseif ( ! $feedback->return ): ?>
                           <h2 class="text-center">Data feedback masih kosong!</h2>
-                          <?php else: 
+                          <?php else:
                           $row = $feedback->data;
+                          if ( $this->input->get('q'))
+                          {
+                            echo '<h2 class="text-center">'.count($row).' data pencarian feedback ditemukan</h2>';
+                          }
                           for($i = 0; $i < count($row); $i++):
                           ?>
                           <tr class="even pointer">
@@ -56,7 +64,7 @@
                                 substr($row[$i]->pesan,0,20).'...' : $row[$i]->pesan;?></td>
                             <td class=" "><?= $row[$i]->nama ?></td>
                             <td class=" "><?= $row[$i]->tanggal_waktu->human_datetime; ?> </td>
-                            <td class=" last"><a href="#"><i class="fa fa-eye"></i></a>
+                            <td class=" last"><a href="#" onclick="doModal('<?= $row[$i]->id; ?>','<?= $row[$i]->nama; ?>','<?= $row[$i]->pesan; ?>','<?= $row[$i]->tanggal_waktu->human_datetime; ?>')"><i class="fa fa-eye"></i></a>
                             </td>
                           </tr>
                           <?php 

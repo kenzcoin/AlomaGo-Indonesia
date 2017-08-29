@@ -3,7 +3,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>History Transaksi <small>Laporam setiap transaksi transfer pulsa</small></h3>
+                <h3>History Transaksi <small>Laporan setiap transaksi transfer pulsa</small></h3>
               </div>
             </div>
 
@@ -15,6 +15,9 @@
               
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
+                  <?php if ( ! $transfer_pulsa->return ): ?>
+                  <h4 class="text-center">Data History masih kosong</h4>
+                  <?php else: ?>
                   <div class="filter">
                     <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
                       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
@@ -41,95 +44,22 @@
                         </thead>
 
                         <tbody>
-                          <tr class="even pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                            </td>
+                          <?php foreach($transfer_pulsa->data as $row): ?>
+                          <tr class="even pointer" onclick="doModal('<?= $row->invoice ?>','<?= humantime($row->tanggal_waktu) ?>','<?= $row->nomer_pengirim ?>',
+                          '<?= $row->nomer_tujuan ?>','<?= $row->status == 0 ? 'Pending' : 'Sukses' ?>','<?= Rupiah($row->nominal) ?>')">
+                            <td style="cursor: default;">#<?= $row->invoice ?></td>
+                            <td style="cursor: default;"><?= humantime($row->tanggal_waktu); ?></td>
+                            <td style="cursor: default;"><?= $row->nomer_tujuan; ?></td>
+                            <td style="cursor: default;"><?= $row->nomer_pengirim; ?></td>
+                            <td style="cursor: default;"><?= $row->status == 0 ? 'Pending' : 'Sukses'; ?></td>
+                            <td class="a-right a-right "><?= Rupiah($row->nominal); ?></td>
                           </tr>
-                          <tr class="odd pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                            </td>
-                          </tr>
-                          <tr class="even pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                            </td>
-                          </tr>
-                          <tr class="odd pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Proses..</td>
-                            <td class="a-right a-right ">25000</td>
-                            </td>
-                          </tr>
-                          <tr class="even pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                          </tr>
-                          <tr class="odd pointer">
-                           <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                          </tr>
-                          <tr class="even pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                          </tr>
-                          <tr class="odd pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                          </tr>
-
-                          <tr class="even pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                          </tr>
-                          <tr class="odd pointer">
-                            <td class=" ">121000040</td>
-                            <td class=" ">May 23, 2014 11:47:56 PM </td>
-                            <td class=" ">081123456789 <i class="success fa fa-long-arrow-up"></i></td>
-                            <td class=" ">081222333444</td>
-                            <td class=" ">Sukses</td>
-                            <td class="a-right a-right ">25000</td>
-                          </tr>
+                          <?php endforeach; ?>
                         </tbody>
                       </table>
                     </div>
                   </div>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>

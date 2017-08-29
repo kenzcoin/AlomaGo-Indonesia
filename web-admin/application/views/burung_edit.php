@@ -14,13 +14,13 @@
                     <h3 class="text-center">Data kabar burung tidak ditemukan!</h3>
                     <?php else: ?>
                     <br />
-                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" action="<?= admin_url()?>do_action?method=edit_kabarburung" method="post" enctype="multipart/form-data">
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Judul <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" value="<?= $kabarburung->return ? $kabarburung->data->judul : null; ?>"id="judul" required="required" class="form-control col-md-7 col-xs-12">
+                          <input type="text" value="<?= $kabarburung->return ? $kabarburung->data->judul : null; ?>" id="judul" required="required" class="form-control col-md-7 col-xs-12" name="title" autocomplete="off">
                         </div>
                       </div>
 
@@ -28,11 +28,13 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Gambar Utama <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <img src="<?= $kabarburung->data->gambar ?>" style="max-width:465px !important; max-height:290px !important;" class="img-responsive" />
-                          <a href="#" style="border-bottom:1px dashed #000;">Ganti</a>
+                          <img src="<?= $kabarburung->data->gambar ?>" style="max-width:465px !important; max-height:290px !important;" class="img-responsive" id="imgPreview"/>
+                          <input type="file" id="imgUpload" style="display:none" name="gambarUtama"/> 
+                          <a href="#" style="border-bottom:1px dashed #000;" id="btnUpload">Ganti</a>
                         </div>
                       </div>
                     
+                    <input type="hidden" name="key" value="<?= $this->input->get('token'); ?>">
                   <div id="alerts"></div>
                   <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor-one">
                     <div class="btn-group">
@@ -103,15 +105,15 @@
                     </div>
                   </div>
 
-                  <div id="editor-one" class="editor-wrapper"><?= $kabarburung->return ? $kabarburung->data->content : null; ?></div>
+                  <div id="editor-one" class="editor-wrapper" required><?= $kabarburung->return ? $kabarburung->data->content : null; ?></div>
 
-                  <textarea name="descr" id="descr" style="display:none;"></textarea>
+                   <textarea name="content" id="textarea" required style="display:none;"></textarea>
                   
                   <br />
 
                   <div class="ln_solid"></div>
                       <div class="form-group">
-                          <button type="submit" class="btn btn-success">Simpan</button>
+                          <button type="submit" id="saveBtn" class="btn btn-success">Simpan</button>
                         </div>
                       <?php endif; ?>
                       </form>

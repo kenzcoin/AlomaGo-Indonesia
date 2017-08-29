@@ -10,9 +10,20 @@ class EndpointInterface extends CI_Model {
 	}
 
 	/* @GET Kabar Burung */
-	public function getKabarBurung($token)
+	public function getKabarBurung($auth)
 	{
-		$this->uri = $this->endpointUri.'/public/kabar-burung?method=list&auth='.$token;
+		$this->uri = $this->endpointUri.'/public/kabar-burung?method=list&auth='.$auth;
+
+		$endpoint = $this->curl->simple_get($this->uri);
+		$result = json_decode($endpoint);
+
+		return $result;
+	}
+
+	/* @GET Kabar Burung */
+	public function getSearchKabarBurung($auth, $q)
+	{
+		$this->uri = $this->endpointUri.'/public/kabar-burung?method=search&q='.$q.'&auth='.$auth;
 
 		$endpoint = $this->curl->simple_get($this->uri);
 		$result = json_decode($endpoint);
@@ -21,9 +32,9 @@ class EndpointInterface extends CI_Model {
 	}
 
 	/* @$GET Detail Kabar Burung */
-	public function getDetailKabarBurung($token , $key)
+	public function getDetailKabarBurung($auth , $key)
 	{
-		$this->uri = $this->endpointUri.'/public/kabar-burung?method=detail&key='.$key.'&auth='.$token;
+		$this->uri = $this->endpointUri.'/public/kabar-burung?method=detail&key='.$key.'&auth='.$auth;
 
 		$endpoint = $this->curl->simple_get($this->uri);
 		$result = json_decode($endpoint);
@@ -39,59 +50,11 @@ class EndpointInterface extends CI_Model {
 		$endpoint = $this->curl->simple_post($this->uri, $data);
 		$result = json_decode($endpoint);
 
-		return $this->curl->info;
+		return $result;
 	}
 
-	private function post_data_parent($active_token, $data_upload, $data_post) {
-    	$result = FALSE;
-    	if(!empty($active_token)) {
-    		$this->uri = $this->endpointUri.'/public/kabar-burung';
-
-    		//preping multipart header
-    		define('MULTIPART_BOUNDARY', '------'.microtime(true));
-    		$header = 'Content-Type: multipart/form-data; boundary='.MULTIPART_BOUNDARY;
-            $content = '';
-
-            if(!empty($data_upload)) {
-                $file_contents = file_get_contents($data_upload['full_path']);
-                //prepping image field
-                $content = "--".MULTIPART_BOUNDARY
-                            ."\r\n"
-                            ."Content-Disposition: form-data; name='gambar'; filename='".$data_upload['orig_name']."'"
-                            ."\r\n"
-                            ."Content-type: ".$data_upload['file_type']
-                            ."\r\n\r\n"
-                            .$file_contents."\r\n";
-            }
-
-    		//prepping post field
-			foreach ($data_post as $key => $value) {
-				$content .= "--".MULTIPART_BOUNDARY."\r\n"
-							."Content-Disposition: form-data; name='".$key."'"
-							."\r\n\r\n"
-							.$value."\r\n";
-			}
-			//signal end of request
-			$content .= "--".MULTIPART_BOUNDARY."--\r\n";
-
-			$context = stream_context_create(array(
-					'http' => array(
-							'method' => 'POST',
-							'header' => $header,
-							'content' => $content
-						)
-				));
-            /*echo "<pre>";
-            echo $header;
-            echo $content;
-            echo "</pre>";*/
-			$result = file_get_contents($this->uri, false, $context);
-    	}
-    	return json_decode($result);
-    }
-
 	/* @$GET Top Kabar Burung */
-	public function getTopKabarBurung($token , $limit = null)
+	public function getTopKabarBurung($auth , $limit = null)
 	{
 		$this->uri = $this->endpointUri.'/public/kabar-burung?method=top';
 
@@ -100,7 +63,7 @@ class EndpointInterface extends CI_Model {
 			$this->uri .= "&limit=".$limit;
 		}
 
-		$this->uri .= "&auth=".$token;
+		$this->uri .= "&auth=".$auth;
 
 		$endpoint = $this->curl->simple_get($this->uri);
 		$result = json_decode($endpoint);
@@ -109,9 +72,9 @@ class EndpointInterface extends CI_Model {
 	}
 
 	/* @GET About */
-	public function getAbout($token)
+	public function getAbout($auth)
 	{
-		$this->uri = $this->endpointUri.'/public/about?auth='.$token;
+		$this->uri = $this->endpointUri.'/public/about?auth='.$auth;
 
 		$endpoint = $this->curl->simple_get($this->uri);
 		$result = json_decode($endpoint);
@@ -131,9 +94,9 @@ class EndpointInterface extends CI_Model {
 	}
 
 	/* @GET Privacy Policy */
-	public function getPrivacy($token)
+	public function getPrivacy($auth)
 	{
-		$this->uri = $this->endpointUri.'/public/privacy?auth='.$token;
+		$this->uri = $this->endpointUri.'/public/privacy?auth='.$auth;
 
 		$endpoint = $this->curl->simple_get($this->uri);
 		$result = json_decode($endpoint);
@@ -153,9 +116,9 @@ class EndpointInterface extends CI_Model {
 	}
 
 	/* @GET Disclaimer */
-	public function getDisclaimer($token)
+	public function getDisclaimer($auth)
 	{
-		$this->uri = $this->endpointUri.'/public/disclaimer?auth='.$token;
+		$this->uri = $this->endpointUri.'/public/disclaimer?auth='.$auth;
 
 		$endpoint = $this->curl->simple_get($this->uri);
 		$result = json_decode($endpoint);
@@ -175,9 +138,14 @@ class EndpointInterface extends CI_Model {
 	}
 
 	/* @$GET Feedback */
-	public function getFeedback($token)
+	public function getFeedback($auth , $q = FALSE)
 	{
-		$this->uri = $this->endpointUri.'/public/feedback?auth='.$token;
+		$this->uri = $this->endpointUri.'/public/feedback?auth='.$auth;
+
+		if ( $q)
+		{
+			$this->uri .= '&q='.$q;
+		}
 
 		$endpoint = $this->curl->simple_get($this->uri);
 		$result = json_decode($endpoint);
@@ -194,6 +162,111 @@ class EndpointInterface extends CI_Model {
 		$result = json_decode($endpoint);
 
 		return $result;
+	}
+
+	/* @$GET Transfer Pulsa */
+	public function getTransferPulsa($auth , $sort = FALSE)
+	{
+		$this->uri = $this->endpointUri.'/public/transaksi?method=transfer_pulsa&auth='.$auth;
+
+		if ( $sort)
+		{
+			$this->uri .= $sort;
+		}
+
+		$endpoint = $this->curl->simple_get($this->uri);
+		$result = json_decode($endpoint);
+
+		return $result;
+	}
+
+	/* @$GET User */
+	public function getUser($auth)
+	{
+		$this->uri = $this->endpointUri.'/public/user?auth='.$auth;
+
+		$endpoint = $this->curl->simple_get($this->uri);
+		$result = json_decode($endpoint);
+
+		return $result;
+	}
+
+	/* @$GET User Detail */
+	public function getUserDetail($auth , $token)
+	{
+		$this->uri = $this->endpointUri.'/public/user?auth='.$auth.'&token='.$token;
+
+		$endpoint = $this->curl->simple_get($this->uri);
+		$result = json_decode($endpoint);
+
+		return $result;
+	}
+
+	/* @POST Download Url */
+	public function postDownloadUrl($data)
+	{
+		$this->uri = $this->endpointUri.'/public/download';
+
+		$endpoint = $this->curl->simple_post($this->uri, $data);
+		$result = json_decode($endpoint);
+
+		return $result;
+	}
+
+	/* @$GET Download Url */
+	public function getDownloadUrl($auth)
+	{
+		$this->uri = $this->endpointUri.'/public/download?auth='.$auth;
+
+		$endpoint = $this->curl->simple_get($this->uri);
+		$result = json_decode($endpoint);
+
+		return $result;
+	}
+
+	/* @POST Kabar Burung with Image */
+	public function postKabarBurungWithImage($dataImage, $data)
+	{
+		$this->uri = $this->endpointUri.'/public/kabar-burung';
+
+		//preping multipart header
+		define('MULTIPART_BOUNDARY', '------'.microtime(true));
+		$header = 'Content-Type: multipart/form-data; boundary='.MULTIPART_BOUNDARY;
+	    $content = '';
+
+	    if(!empty($dataImage)) {
+	        $file_contents = file_get_contents($dataImage['full_path']);
+	        //prepping image field
+	        $content = "--".MULTIPART_BOUNDARY
+	                    ."\r\n"
+	                    ."Content-Disposition: form-data; name='gambar_utama'; filename='".$dataImage['orig_name']."'"
+	                    ."\r\n"
+	                    ."Content-type: ".$dataImage['file_type']
+	                    ."\r\n\r\n"
+	                    .$file_contents."\r\n";
+	    }
+
+		//prepping post field
+		foreach ($data as $key => $value) {
+			$content .= "--".MULTIPART_BOUNDARY."\r\n"
+						."Content-Disposition: form-data; name='".$key."'"
+						."\r\n\r\n"
+						.$value."\r\n";
+		}
+		//signal end of request
+		$content .= "--".MULTIPART_BOUNDARY."--\r\n";
+
+		$context = stream_context_create(array(
+				'http' => array(
+						'method' => 'POST',
+						'header' => $header,
+						'content' => $content
+					)
+			));
+
+		$result = file_get_contents($this->uri, false, $context);
+
+		return json_decode($result);
 	}
 }
 

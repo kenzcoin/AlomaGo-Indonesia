@@ -227,5 +227,33 @@ if ( ! function_exists('createSlug'))
 	}
 }
 
+if ( ! function_exists('createInvoice'))
+{
+	function createInvoice()
+	{
+		$CI =& get_instance();
+
+		$query = $CI->db->get('transfer_pulsa')->result();
+
+		$string = "AG";
+		$now = 0;
+
+		for ($i = 0; $i < 6; $i++) 
+		{
+		    $now .= mt_rand(0,9);
+		}
+
+		foreach($query as $row)
+		{
+			if ( $row->invoice == $now)
+			{
+				$now .= mt_rand(0,9);
+			}
+		}
+
+		return $string.$now;
+	}
+}
+
 /* End of file aloma_helper.php */
 /* Location: ./application/helpers/aloma_helper.php */

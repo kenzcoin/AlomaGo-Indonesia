@@ -47,6 +47,77 @@
     <!-- SweetAlert -->
     <script type="text/javascript" src="<?= resources_url(); ?>build/js/sweetalert.min.js"></script>
 
+    <script type="text/javascript">
+        <?php if ( $this->uri->segment(2) == 'feedback'): ?>
+        function doModal(a,b,x,y)
+        {
+          /* a = id , b = nama , x = pesan , y = tanggal_waktu */
+              html =  '<div id="dynamicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">';
+              html += '<div class="modal-dialog">';
+              html += '<div class="modal-content">';
+              html += '<div class="modal-header">';
+              html += '<a class="close" data-dismiss="modal">×</a>';
+              html += '<h4 class="modal-title">Feedback #'+ a +'</h4>'
+              html += '</div>';
+              html += '<div class="modal-body">';
+              html += '<h6>Nama</h6><h5>' + b + '</h5>';
+              html += '<hr/>';
+              html += '<h6>Pesan</h6><h5>' + x + '</h5>';
+              html += '<hr/>';
+              html += '<h6>Terkirim</h6><h5>' + y + '</h5>';
+              html += '</div>';
+              html += '<div class="modal-footer">';
+              html += '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+              html += '</div>';  // content
+              html += '</div>';  // dialog
+              html += '</div>';  // footer
+              html += '</div>';  // modalWindow
+              $('body').append(html);
+              $("#dynamicModal").modal();
+              $("#dynamicModal").modal('show');
+
+              $('#dynamicModal').on('hidden.bs.modal', function (e) {
+                  $(this).remove();
+              });
+        }
+
+        <?php elseif( $this->uri->segment(2) == 'history'): ?>
+        function doModal(inv, invDt, sender, to , status, nominal)
+        {
+          /* a = id , b = nama , x = pesan , y = tanggal_waktu */
+              html =  '<div id="dynamicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">';
+              html += '<div class="modal-dialog">';
+              html += '<div class="modal-content">';
+              html += '<div class="modal-header">';
+              html += '<a class="close" data-dismiss="modal">×</a>';
+              html += '<h4 class="modal-title">Invoice #'+ inv +' <small>' + invDt + '</small></h4>'
+              html += '</div>';
+              html += '<div class="modal-body">';
+              html += '<h6>No. Pengirim</h6><h5>' + sender + '</h5>';
+              html += '<hr/>';
+              html += '<h6>No. Penerima</h6><h5>' + to + '</h5>';
+              html += '<hr/>';
+              html += '<h6> Status</h6><h5>' + status + '</h5>';
+              html += '<hr/>';
+              html += '<h6>Nominal</h6><h5>' + nominal + '</h5>';
+              html += '</div>';
+              html += '<div class="modal-footer">';
+              html += '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+              html += '</div>';  // content
+              html += '</div>';  // dialog
+              html += '</div>';  // footer
+              html += '</div>';  // modalWindow
+              $('body').append(html);
+              $("#dynamicModal").modal();
+              $("#dynamicModal").modal('show');
+
+              $('#dynamicModal').on('hidden.bs.modal', function (e) {
+                  $(this).remove();
+              });
+        }
+        <?php endif; ?>
+    </script>
+    
     <script>
         $(function(){
             $('#saveBtn').click(function () {
@@ -59,7 +130,7 @@
 
         <?php if ( $this->uri->segment(2) == 'kabar-burung'): ?>
 
-        function deleteKabarBurung(x)
+        function deleteKabarBurung(x , nextUri)
         {
             swal({
               title: "Hapus kabar burung?",
@@ -75,17 +146,17 @@
             },
             function(){
               setTimeout(function(){
-                    swal("Terhapus!", "Kabar burung berhasil dihapus!", "success");
+                  window.location.href = nextUri;
               }, 2000);
             });
         }
 
-        function readURL(input) {
+        function readURL(input , tags) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 
                 reader.onload = function (e) {
-                    $('#imagePreview').attr('src', e.target.result);
+                    $('#' + tags).attr('src', e.target.result);
                 }
                 
                 reader.readAsDataURL(input.files[0]);
@@ -93,10 +164,18 @@
         }
 
         $("#gambarUtama").change(function(){
-            readURL(this);
+            readURL(this , 'imagePreview');
             $("#imagePreview").show();
         });
 
+        $("#btnUpload").click(function(){
+            $("#imgUpload").trigger('click');
+        });
+
+        $("#imgUpload").change(function(){
+            readURL(this, 'imgPreview');
+             $("#imgPreview").show();
+        });
         <?php endif; ?>
     </script>
   </body>

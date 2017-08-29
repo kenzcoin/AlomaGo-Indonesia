@@ -7,6 +7,11 @@
                 <div class="x_title">
                   <h2>Kabar Burung<small>New</small></h2>
                   <div class="clearfix"></div>
+                  <?php if ( $this->session->userdata('uploadMsg')): ?>
+                  <h4 class="text-center"><?= $this->session->userdata('uploadMsg'); ?></h4>
+                  <?php
+                  $this->session->unset_userdata('uploadMsg');
+                  endif; ?>
                 </div>
                 <div class="x_content">
                     <br />

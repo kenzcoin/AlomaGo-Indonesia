@@ -42,7 +42,7 @@ class Resources extends REST_Controller {
 						}
 						else
 						{
-							if ( ! $this->input->get('method'))
+							if ( ! $this->get('method'))
 							{
 								$response = array(
 										'return' => false,
@@ -51,7 +51,7 @@ class Resources extends REST_Controller {
 							}
 							else
 							{
-								switch( trimLower($this->input->get('method')))
+								switch( trimLower($this->get('method')))
 								{
 									case 'list':
 										$query = $this->db
@@ -97,7 +97,7 @@ class Resources extends REST_Controller {
 									break;	
 
 									case 'detail':
-										if ( ! $this->input->get('key'))
+										if ( ! $this->get('key'))
 										{
 											$response = array(
 													'return' => false,
@@ -108,7 +108,7 @@ class Resources extends REST_Controller {
 										{
 											$query = $this->db
 											->from('berita')
-											->where( array('key' => $this->input->get('key')))
+											->where( array('key' => $this->get('key')))
 											->order_by('tanggal_waktu DESC')
 											->get();
 
@@ -150,9 +150,61 @@ class Resources extends REST_Controller {
 										}
 									break;
 
+									case 'search':
+										if ( ! $this->get('q'))
+										{
+											$response = array(
+													'return' => false,
+													'error_message' => $this->msgErrorParameter
+												);
+										}
+										else
+										{	
+											$sql = "SELECT * FROM berita WHERE judul LIKE '%".$this->get('q')."%' 
+													OR content LIKE '%".$this->get('q')."%'";
+											$query = $this->db->query($sql);
+
+											$num = $query->num_rows();
+
+											if ( $num > 0 )
+											{
+												$result = null;
+
+												foreach($query->result() as $data)
+												{
+													$result[] = array(
+															'judul' => $data->judul,
+															'gambar' => $data->gambar,
+															'content' => $data->content,
+															'author' => $data->author,
+															'slug' => $data->slug,
+															'dilihat' => $data->dilihat,
+															'tanggal_waktu' => array(
+																	'timestamp' => strtotime($data->tanggal_waktu),
+																	'real_datetime' => $data->tanggal_waktu,
+																	'human_datetime' => humantime($data->tanggal_waktu)
+																),
+															'terakhir_diubah' => array(
+																	'timestamp' => strtotime($data->terakhir_diubah),
+																	'real_datetime' => $data->terakhir_diubah,
+																	'human_datetime' => humantime($data->terakhir_diubah)
+																),
+															'key' => $data->key
+														);
+												}
+											}
+
+											$response = array(
+													'return' => $num > 0 ? true : false,
+													$num > 0 ? 'data' : 'error_message' =>
+													$num > 0 ? $result : 'Data kabar burung tidak ditemukan',
+												);
+										}
+									break;
+
 									case 'top':
-										$limit = $this->input->get('limit') ?
-										$this->input->get('limit') : 5;
+										$limit = $this->get('limit') ?
+										$this->get('limit') : 5;
 
 										$query = $this->db
 										->from('berita')
@@ -232,7 +284,7 @@ class Resources extends REST_Controller {
 							}
 
 							$response = array(
-									'return' => true,
+									'return' => $row > 0 ? true : false,
 									$row > 0 ? 'data' : 'error_message' =>
 									$row > 0 ? $result : 'Data not found!'
 								);
@@ -270,7 +322,7 @@ class Resources extends REST_Controller {
 							}
 
 							$response = array(
-									'return' => true,
+									'return' => $row > 0 ? true : false,
 									$row > 0 ? 'data' : 'error_message' =>
 									$row > 0 ? $result : 'Data not found!'
 								);
@@ -308,7 +360,7 @@ class Resources extends REST_Controller {
 							}
 
 							$response = array(
-									'return' => true,
+									'return' => $row > 0 ? true : false,
 									$row > 0 ? 'data' : 'error_message' =>
 									$row > 0 ? $result : 'Data not found!'
 								);
@@ -325,10 +377,21 @@ class Resources extends REST_Controller {
 						}
 						else
 						{
-							$query = $this->db
-							->from('feedback')
-							->order_by('tanggal_waktu DESC')
-							->get();
+							if ( $this->get('q'))
+							{
+								$query = $this->db
+								->from('feedback')
+								->like('pesan' , $this->get('q') , 'both')
+								->order_by('tanggal_waktu DESC')
+								->get();
+							}
+							else
+							{
+								$query = $this->db
+								->from('feedback')
+								->order_by('tanggal_waktu DESC')
+								->get();
+							}
 
 							$row = $query->num_rows();
 
@@ -339,6 +402,7 @@ class Resources extends REST_Controller {
 								foreach($query->result() as $data)
 								{
 									$result[] = array(
+											'id' => $data->id,
 											'nama' => $data->nama,
 											'pesan' => $data->pesan,
 											'tanggal_waktu' => array(
@@ -351,12 +415,189 @@ class Resources extends REST_Controller {
 							}
 
 							$response = array(
-									'return' => true,
+									'return' => $row > 0 ? true : false,
 									$row > 0 ? 'data' : 'error_message' =>
 									$row > 0 ? $result : 'Data not found!'
 								);
 						}
+					break;
 
+					case 'transaksi':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$getdata = $this->get();
+
+							if ( ! $getdata['method'])
+							{
+								$response = array(
+										'return' => false,
+										'error_message' => $this->msgMethodNotAllowed
+									);
+							}
+							else
+							{
+								// select * from transfer_pulsa Where month(tanggal_waktu) = MONTH(current_date());
+								switch( $getdata['method'])
+								{
+									case 'transfer_pulsa':
+										$query = null;
+
+										if ( isset($getdata['sort']))
+										{
+											$x = explode(':' , $getdata['sort']);
+											$x = str_replace(array('[',']'), '', $x);
+
+											switch( trimLower($x[0]))
+											{
+												case 'no_hp':
+													$query = $this->db->get_where('transfer_pulsa', array(
+															'nomer_pengirim' => $x[1]
+														));
+												break;
+
+												case 'user_id':
+													$query = $this->db->get_where('transfer_pulsa', array(
+															'id_user' => $x[1]
+														));
+												break;
+
+												case 'detail':
+													$query = $this->db->get_where('transfer_pulsa', array(
+															'invoice' => $x[1]
+														));
+												break;
+											}
+										}
+										else
+										{
+											$query = $this->db
+												->from('transfer_pulsa')
+												->order_by('tanggal_waktu DESC')
+												->get();
+										}
+
+										$num = $query ? $query->num_rows() : null;
+
+										$response = array(
+												'return' => $query ? true : false,
+												$query ? $num > 0 ? 
+													'data' : 'message'
+												: 'error_message' =>
+												$query ? $num > 0 ? 
+													$query->result() : 'Data masih kosong!' 
+												: $this->msgMethodNotAllowed
+											);
+									break;
+
+									default:
+										$response = array(
+												'return' => false,
+												'error_message' => $this->msgMethodNotAllowed
+											);
+									break;
+								}
+							}
+						}
+					break;
+
+					case 'user':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$getdata = $this->get();
+
+							$query = null;
+
+							if ( isset($getdata['token']))
+							{
+								// detail user
+								$query = $this->db->get_where('user', array(
+										'token' => trim($getdata['token'])
+									));
+							}
+							else
+							{
+								$query = $this->db
+									->from('user')
+									->order_by('terdaftar DESC')
+									->get();
+							}
+
+							$num = $query ? $query->num_rows() : false;
+
+							$response = array(
+									'return' => $num > 0 ? true : false,
+									$num > 0 ? 'data' : 'error_message' => 
+									$num > 0 ? $query->result() : 'Data user tidak ditemukan!'
+								);
+						}
+					break;
+
+					case 'download':
+						if ( ! $auth )
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$getdata = $this->get();
+
+							$data = null;
+
+							if ( isset($getdata['url']))
+							{
+								$query = $this->db->get_where('app_info' , array(
+										'key' => 'url-'. (int) $getdata['url']
+									));
+
+								foreach($query->result() as $row)
+								{
+									$data[] = array(
+											'title' => $row->name,
+											'content' => $row->content,
+											'last_modified' => $row->last_modified
+										);
+								}
+							}
+							else
+							{
+								$this->db->like('key' , 'url-' , 'after');
+								$query = $this->db->get('app_info');
+
+								foreach($query->result() as $row)
+								{
+									$data[] = array(
+											'title' => $row->name,
+											'content' => $row->content,
+											'last_modified' => $row->last_modified
+										);
+								}
+							}
+
+							$result = $data ? $data : null;
+
+							$response = array(
+									'return' => $result ? true : false,
+									$result ? 'data' : 'error_message' => 
+									$result ? $result : 'Data download url tidak ditemukan!'
+								);
+						}
 					break;
 
 					default:
@@ -392,7 +633,12 @@ class Resources extends REST_Controller {
 				'title' => $this->post('title'),
 				'content' => $this->post('content'),
 				'key' => $this->post('key'),
-				'author' => $this->post('author')
+				'author' => $this->post('author'),
+				'id_user' => $this->post('id_user'),
+				'nomer_tujuan' => $this->post('nomer_tujuan'),
+				'nomer_pengirim' => $this->post('nomer_pengirim'),
+				'nominal' => $this->post('nominal'),
+				'dilihat' => $this->post('dilihat')
 			);
 
 		switch( trimLower($action))
@@ -438,7 +684,7 @@ class Resources extends REST_Controller {
 								switch( trimLower($postdata['method']))
 								{
 									case 'baru':
-										if ( ! $postdata['title'] 
+										if ( ! $postdata['title']
 											|| ! $postdata['content'] || ! $postdata['author'])
 										{
 											$response = array(
@@ -448,34 +694,98 @@ class Resources extends REST_Controller {
 										}
 										else
 										{
-											$mimeAccepted = array('image/png','image/jpeg');
-											$extAccepted = array('jpg','png','jpeg');
-											$checkExt = explode('.' , $_FILES['gambar_utama']['name']);
-											$imageMime = checkMime($_FILES['gambar_utama']['name']);
+											// $mimeAccepted = array('image/png','image/jpeg');
+											// $extAccepted = array('jpg','png','jpeg');
+											// $checkExt = explode('.' , $_FILES['gambar_utama']['name']);
+											// $imageMime = checkMime($_FILES['gambar_utama']['name']);
 
-											if ( ! in_array($imageMime, $mimeAccepted) 
-												|| ! in_array(end($checkExt), $extAccepted))
+											// if ( ! in_array($imageMime, $mimeAccepted))
+											// {
+											// 	$response = array(
+											// 			'return' => false,
+											// 			'error_message' => 'Maaf, Gambar utama hanya boleh berektensi JPG,JPEG atau PNG'
+											// 		);
+											// }
+											$checkslug = $this->db->get_where('berita' , 
+												array('slug' => createSlug($postdata['title'])));
+
+											$rowslug = $checkslug->num_rows();
+
+											if ( $rowslug > 0)
 											{
 												$response = array(
 														'return' => false,
-														'error_message' => 'Maaf, Gambar utama hanya boleh berektensi JPG,JPEG atau PNG'
+														'error_message' => 'Slug masih ada yang sama, harap ubah Judul'
 													);
 											}
 											else
 											{
-												$checkslug = $this->db->get_where('berita' , 
-													array('slug' => createSlug($postdata['title'])));
+												$destination = 'resources/uploads/';
+												$today = date('Ymd');
 
-												$rowslug = $checkslug->num_rows();
-
-												if ( $rowslug > 0)
+												if ( ! is_dir(FCPATH.$destination.$today))
 												{
-													$response = array(
-															'return' => false,
-															'error_message' => 'Slug masih ada yang sama, harap ubah Judul'
-														);
+													mkdir(FCPATH.$destination.$today);
 												}
-												else
+
+												$imageEncrypt = generate_image($_FILES['gambar_utama']['name']);
+												$dirUpload = FCPATH.$destination.$today.'/'.$imageEncrypt;
+												$urlUpload = base_url().$destination.$today.'/'.$imageEncrypt;
+
+												move_uploaded_file($_FILES['gambar_utama']['tmp_name'], $dirUpload);
+
+												$key = generate_key();
+												$data = array(
+														'judul' => $postdata['title'],
+														'gambar' => $urlUpload,
+														'content' => $postdata['content'],
+														'author' => $postdata['author'],
+														'slug' => createSlug($postdata['title']),
+														'dilihat' => 0,
+														'key' => $key,
+														'tanggal_waktu' => date('Y-m-d H:i:s'),
+														'terakhir_diubah' => date('Y-m-d H:i:s')
+													);
+
+												$this->db->insert('berita' , $data);
+
+												$query = $this->db->get_where('berita',  array(
+														'slug' => createSlug($postdata['title']),
+														'key' => $key
+													))->result()[0];
+
+												$response = array(
+														'return' => true,
+														'message' => 'Berhasil menambahkan Kabar Burung',
+														'data' => $query,
+														'v' => $_FILES['gambar_utama'],
+														'uploads' => array(
+																'dir_upload' => $dirUpload,
+																'url_upload' => $urlUpload,
+															)
+													);
+											}
+										}
+									break;
+
+									case 'ubah':
+										if ( ! $postdata['key'])
+										{
+											$response = array(
+													'return' => false,
+													'error_message' => $this->msgFieldNull
+												);
+										}
+										else
+										{
+											$checkkey = $this->db->get_where('berita' , 
+													array('key' => createSlug($postdata['key'])));
+
+											$databerita = $checkkey->result()[0];
+
+											if ( $checkkey->num_rows() > 0 )
+											{	
+												if ( isset($_FILES['gambar_utama']))
 												{
 													$destination = 'resources/uploads/';
 													$today = date('Ymd');
@@ -488,53 +798,58 @@ class Resources extends REST_Controller {
 													$imageEncrypt = generate_image($_FILES['gambar_utama']['name']);
 													$dirUpload = FCPATH.$destination.$today.'/'.$imageEncrypt;
 													$urlUpload = base_url().$destination.$today.'/'.$imageEncrypt;
-													$data = null;
-													foreach($_FILES['gambar_utama'] as $key => $value)
-													{
-														$data[] = array(
-																$key => $value
-															);
-													}
 
 													move_uploaded_file($_FILES['gambar_utama']['tmp_name'], $dirUpload);
 
-													$key = generate_key();
-													$data = array(
-															'judul' => $postdata['title'],
-															'gambar' => $urlUpload,
-															'content' => $postdata['content'],
-															'author' => $postdata['author'],
-															'slug' => createSlug($postdata['title']),
-															'dilihat' => 0,
-															'key' => $key,
-															'tanggal_waktu' => date('Y-m-d H:i:s'),
-															'terakhir_diubah' => date('Y-m-d H:i:s')
-														);
+													$p = preg_replace('#^https?://#', '', $databerita->gambar);
+													$x = explode('/' , $p);
+													$count = count($x);
+													$realpath = null;
 
-													// $this->db->insert('berita' , $data);
+													foreach($x as $key => $value)
+													{
+														if ( $key == 0)
+															continue;
 
-													$query = $this->db->get_where('berita',  array(
-															'slug' => createSlug($postdata['title']),
-															'key' => $key
-														))->result()[0];
+														$realpath .= $value.($key == ($count - 1) ? null : '/');
+													}
 
-													$response = array(
-															'return' => true,
-															'message' => 'Berhasil menambahkan Kabar Burung',
-															'data' => $query,
-															'v' => $_FILES['gambar_utama'],
-															'uploads' => array(
-																	'dir_upload' => $dirUpload,
-																	'url_upload' => $urlUpload,
-																)
-														);
+													unlink(FCPATH.$realpath);
 												}
+
+												$key = generate_key();
+												$data = array(
+														'judul' => $postdata['title'] ?
+															$postdata['title'] : $databerita->judul,
+														'gambar' => $_FILES['gambar_utama'] ? 
+															$urlUpload : $databerita->gambar,
+														'content' => $postdata['content'] ?
+															$postdata['content'] : $databerita->content,
+														'author' => $postdata['author'] ?
+															$postdata['author'] : $databerita->author,
+														'slug' => $postdata['title'] ? 
+															createSlug($postdata['title']) : $databerita->judul,
+														'dilihat' => $postdata['dilihat'] ? 
+															(int) $postdata['dilihat'] : $databerita->dilihat,
+														'key' => $key,
+														'terakhir_diubah' => date('Y-m-d H:i:s')
+													);
+												$this->db->where( array('key' => $postdata['key']));
+												$this->db->update('berita' , $data);
+
+												$response = array(
+														'return' => true,
+														'message' => 'Berhasil mengubah Kabar Burung'
+													);
+											}
+											else
+											{
+												$response = array(
+														'return' => false,
+														'error_message' => 'Berita tidak ditemukan!'
+													);
 											}
 										}
-									break;
-
-									case 'update':
-										$ubah = array('UPD');
 									break;
 
 									case 'hapus':
@@ -555,6 +870,22 @@ class Resources extends REST_Controller {
 
 											if ( $row > 0)
 											{
+
+												$p = preg_replace('#^https?://#', '', $query->result()[0]->gambar);
+												$x = explode('/' , $p);
+												$count = count($x);
+												$realpath = null;
+
+												foreach($x as $key => $value)
+												{
+													if ( $key == 0)
+														continue;
+
+													$realpath .= $value.($key == ($count - 1) ? null : '/');
+												}
+
+												unlink(FCPATH.$realpath);
+
 												$this->db->delete('berita' , array('key' => $postdata['key']));
 
 												$response = array(
@@ -764,6 +1095,126 @@ class Resources extends REST_Controller {
 											);
 									break;
 								}
+							}
+						}
+					break;
+
+					case 'transaksi':
+						if ( ! $this->token)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						elseif ( ! $auth)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						elseif ( ! $postdata['method'])
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						else
+						{
+							switch( trimLower($postdata['method']))
+							{
+								case 'transfer_pulsa':
+									if ( ! $postdata['nomer_pengirim'] || ! $postdata['nomer_tujuan']
+											|| ! $postdata['nominal'])
+									{
+										$response = array(
+												'return' => false,
+												'error_message' => $this->msgFieldNull
+											);
+									}
+									else
+									{
+										// status { 0 => pending , 1 => sukses }
+										$dataInsert = array(
+												'invoice' => createInvoice(),
+												'id_user' => $postdata['id_user'] ? 
+													$postdata['id_user'] : 0,
+												'nomer_pengirim' => $postdata['nomer_pengirim'],
+												'nomer_tujuan' => $postdata['nomer_tujuan'],
+												'nominal' => $postdata['nominal'],
+												'status' => $postdata['status'] ? $postdata['status'] : 0, 
+												'tanggal_waktu' => date('Y-m-d H:i:s')
+											);
+
+										$this->db->insert('transfer_pulsa' , $dataInsert);
+
+										$response = array(
+												'return' => true,
+												'message' => 'Berhasil menambah data!'
+											);
+									}
+								break;
+
+								default:
+									$response = array(
+											'return' => false,
+											'error_message' => $this->msgMethodNotAllowed
+										);
+								break;
+							}
+						}
+					break;
+
+					case 'download':
+						if ( ! $this->token)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgFieldNull
+								);
+						}
+						elseif ( ! $auth)
+						{
+							$response = array(
+									'return' => false,
+									'error_message' => $this->msgNotAuthorized
+								);
+						}
+						else
+						{
+							$postdata = $this->post();
+
+							if ( ! $postdata['link_1'] || ! $postdata['link_2']
+									|| ! $postdata['link_3'])
+							{
+								$response = array(
+										'return' => false,
+										'error_message' => $this->msgFieldNull
+									);
+							}
+							else
+							{
+								$this->db->like('key' , 'url-' , 'after');
+								$appInfo = $this->db->get('app_info');
+
+								$no = 1;
+								foreach($appInfo->result() as $row)
+								{
+									$data = array(
+											'content' => $postdata['link_'.$no++],
+											'last_modified' => date('Y-m-d H:i:s')
+										);
+
+									$this->db->where( array('key' => $row->key));
+									$this->db->update('app_info' , $data);
+								}
+
+								$response = array(
+										'return' => true,
+										'message' => 'Berhasil update download url'
+									);
 							}
 						}
 					break;

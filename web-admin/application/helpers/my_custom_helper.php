@@ -58,3 +58,38 @@ if ( ! function_exists('generate_key'))
 		return $key1.'-'.$key2.'-'.$key3.'-'.$key4;
 	}
 }
+
+if ( ! function_exists('Rupiah'))
+{
+	function Rupiah($angka , $string = "Rp")
+	{
+		return $string.number_format($angka , 1 , ',' , '.');
+	}
+}
+
+if ( ! function_exists('Nominal'))
+{
+	function Nominal($number)
+	{
+		if ( $number >= 1000000000000)
+		{
+			$output = ($number/1000000000000).'T';
+		}
+		elseif ( $number >= 1000000000)
+		{
+			$output = ($number/1000000000).'M';
+		}
+		elseif($number>=1000000){
+			$output = ($number/1000000).'JT';
+		}else if($number>=1000){
+			$output = ($number/1000).'K';
+		}
+		else{
+			$output = $number;
+		}
+
+		$x = explode('.', $output);
+
+		return $x[0].( isset($x[1]) ? '.'.str_replace(0, '', $x[1]) : null);
+	}
+}

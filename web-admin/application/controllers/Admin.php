@@ -37,6 +37,9 @@ class Admin extends CI_Controller {
 		$data['subTitle'] = "Dashboard";
 		$data['topLists'] = $this->EndpointInterface->getTopKabarBurung($this->authToken);
 		$data['dataFeedback'] = $this->EndpointInterface->getFeedback($this->authToken);
+		$data['transferPulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken);
+		$data['dataUser'] = $this->EndpointInterface->getUser($this->authToken);
+		
 		self::isTemplate('dashboard' , $data);
 	}
 
@@ -67,21 +70,42 @@ class Admin extends CI_Controller {
 					break;
 
 					case 'edit':
-						if ( ! $this->input->get('encrypted'))
+						if ( ! $this->input->get('token'))
 						{
 							redirect(admin_url());
 						}
 						else
 						{
 							$data['kabarburung'] = $this->EndpointInterface->getDetailKabarBurung(
-													$this->authToken , $this->input->get('encrypted'));
+													$this->authToken , $this->input->get('token'));
 							self::isTemplate('burung_edit' , $data);	
 						}
 					break;
 
+					case 'hapus':
+						$getdata = $this->input->get();
+						if ( ! $getdata['token'])
+						{
+							redirect(admin_url());
+						}
+							
+						$data = array(
+								'auth' => $this->authToken,
+								'method' => 'hapus',
+								'key' => $getdata['token']
+							);
+
+						$this->EndpointInterface->postKabarBurung($data);
+
+						redirect(admin_url().'kabar-burung');
+					break;
+
 					default:
+						$getdata = $this->input->get();
 						$data['subTitle'] = "Kabar Burung";
-						$data['lists'] = $this->EndpointInterface->getKabarBurung($this->authToken);
+						$data['lists'] = trim(isset($getdata['q'])) ?
+							$this->EndpointInterface->getSearchKabarBurung($this->authToken, trim($getdata['q']))
+							: $this->EndpointInterface->getKabarBurung($this->authToken);
 						self::isTemplate('burung' , $data);
 					break;
 				}
@@ -113,6 +137,7 @@ class Admin extends CI_Controller {
 			case 'download-url':
 				self::hasLogin();
 				$data['subTitle'] = "Download URL";
+				$data['dataUrl'] = $this->EndpointInterface->getDownloadUrl($this->authToken);
 				self::isTemplate('url' , $data);
 			break;
 
@@ -121,13 +146,17 @@ class Admin extends CI_Controller {
 			case 'history':
 				self::hasLogin();
 				$data['subTitle'] = "History";
+				$data['transfer_pulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken);
 				self::isTemplate('history' , $data);
 			break;
 
 			case 'feedback':
+				$getdata = $this->input->get();
 				self::hasLogin();
 				$data['subTitle'] = "Feedback";
-				$data['feedback'] = $this->EndpointInterface->getFeedback($this->authToken);
+				$data['feedback'] = trim(isset($getdata['q'])) ? 
+					$this->EndpointInterface->getFeedback($this->authToken , trim($getdata['q']))
+					: $this->EndpointInterface->getFeedback($this->authToken);
 				self::isTemplate('feedback' , $data);
 			break;
 
@@ -251,14 +280,108 @@ class Admin extends CI_Controller {
 							$data = array(
 									'auth' => $this->authToken,
 									'method' => 'baru',
-									'gambar_utama' => $_FILES['gambar_utama'],
+									// 'gambar_utama' => $_FILES['gambar_utama'],
 									'title' => $postdata['title'],
 									'content' => nl2br($postdata['content']),
 									'author' => $this->admin_data->nama
 								);
 
-							$rs = $this->EndpointInterface->postKabarBurung($data);
-							print_r($rs);
+							// print_r($data['gambar_utama']);
+
+							$temp_upload = $this->temp_upload('gambar_utama'); 
+                   			$dataImage = $temp_upload['data'];
+
+                   			if ( ! $temp_upload['status'])
+                   			{
+                   				$this->session->set_userdata( array('uploadMsg' => 'Maaf, File gambar hanya boleh diupload berekstensi JPG, PNG atau JPEG'));
+                   				redirect(admin_url().'kabar-burung?method=new');	
+                   			}
+
+							$rs = $this->EndpointInterface->postKabarBurungWithImage($dataImage,$data);
+
+							if ( $rs->return)
+							{
+								unlink(FCPATH.'resources/uploads/'.$_FILES['gambar_utama']['name']);
+
+								$this->session->set_userdata( array('uploadMsg' => 'Kabar Burung berhasil ditambakan'));
+							}
+							else
+							{
+								$this->session->set_userdata( array('uploadMsg' => $rs->error_message));
+							}
+
+							redirect(admin_url().'kabar-burung?method=new');	
+						break;
+
+						case 'edit_kabarburung':
+							$postdata = $this->input->post();
+							if ( ! $postdata)
+							{
+								// Gambar ERROR
+								redirect(admin_url().'kabar-burung?method=new');
+							}
+
+							$data = array(
+									'auth' => $this->authToken,
+									'method' => 'ubah',
+									'key' => $postdata['key'],
+									'title' => $postdata['title'],
+									'content' => nl2br($postdata['content']),
+									'author' => $this->admin_data->nama
+								);
+
+							if ( $_FILES['gambarUtama']['size'] > 1 )
+							{
+								$temp_upload = $this->temp_upload('gambarUtama');
+	                   			$dataImage = $temp_upload['data'];
+
+	                   			if ( ! $temp_upload['status'])
+	                   			{
+	                   				$this->session->set_userdata( array('uploadMsg' => 'Maaf, File gambar hanya boleh diupload berekstensi JPG, PNG atau JPEG'));
+	                   				redirect(admin_url().'kabar-burung?method=new');	
+	                   			}
+
+	                   			$rs = $this->EndpointInterface->postKabarBurungWithImage($dataImage,$data);
+							}
+							else
+							{
+								$rs = $this->EndpointInterface->postKabarBurungWithImage(null,$data);
+							}
+
+							if ( $rs->return)
+							{
+								if ( $_FILES['gambarUtama']['size'] > 0) 
+								{
+									unlink(FCPATH.'resources/uploads/'.$_FILES['gambarUtama']['name']);
+								}
+
+								$this->session->set_userdata( array('uploadMsg' => 'Kabar Burung berhasil diubah'));
+							}
+							else
+							{
+								$this->session->set_userdata( array('uploadMsg' => $rs->error_message));
+							}
+							
+							redirect(admin_url().'kabar-burung');	
+						break;
+
+						case 'download-url':
+							$postdata = $this->input->post();
+							if ( ! $postdata)
+							{
+								redirect(admin_url().'download-url');
+							}
+
+							$data = array(
+									'auth' => $this->authToken,
+									'link_1' => $postdata['link1'],
+									'link_2' => $postdata['link2'],
+									'link_3' => $postdata['link3']
+								);
+
+							$this->EndpointInterface->postDownloadUrl($data);
+
+							redirect(admin_url().'download-url');
 						break;
 
 						default:
@@ -278,4 +401,20 @@ class Admin extends CI_Controller {
 			break;
 		}
 	}
+
+	private function temp_upload($field_name) {
+    	$config['upload_path'] = FCPATH.'resources/uploads/';
+    	$config['allowed_types'] = 'jpeg|jpg|png';
+    	$this->load->library('upload', $config);
+
+    	if(!$this->upload->do_upload($field_name)) {
+    		$status = 0;
+    		$data = $this->upload->display_errors();
+    	}
+    	else {
+    		$status = 1;
+    		$data = $this->upload->data();
+    	}
+    	return array('status' => $status, 'data' => $data);
+    }
 }
