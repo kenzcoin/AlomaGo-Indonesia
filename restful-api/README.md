@@ -26,7 +26,7 @@
 
 ### GET Transaksi
 #### Transfer Pulsa
-/public/transaksi?method=transfer_pulsa&sort=[no_hp/user_id/detail:value]&auth=:auth_key
+/public/transaksi?method=transfer_pulsa&sort=[no_hp/user_id/detail/datetime:value]&auth=:auth_key
 
 ### GET download URL
 /public/download?auth=:auth_key

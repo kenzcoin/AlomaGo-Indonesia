@@ -1584,7 +1584,7 @@ if (typeof NProgress != 'undefined') {
 			  startDate: moment().subtract(29, 'days'),
 			  endDate: moment(),
 			  minDate: '01/01/2012',
-			  maxDate: '12/31/2015',
+			  maxDate: '12/31/2019',
 			  dateLimit: {
 				days: 60
 			  },
@@ -1658,7 +1658,7 @@ if (typeof NProgress != 'undefined') {
 				var optionSet1 = {
 				  startDate: moment().subtract(29, 'days'),
 				  endDate: moment(),
-				  minDate: '01/01/2012',
+				  minDate: '01/01/2017',
 				  maxDate: '12/31/2020',
 				  dateLimit: {
 					days: 60
@@ -1669,12 +1669,12 @@ if (typeof NProgress != 'undefined') {
 				  timePickerIncrement: 1,
 				  timePicker12Hour: true,
 				  ranges: {
-					'Today': [moment(), moment()],
-					'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-					'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-					'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-					'This Month': [moment().startOf('month'), moment().endOf('month')],
-					'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+					'Hari ini': [moment(), moment()],
+					'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+					'7 Hari terakhir': [moment().subtract(6, 'days'), moment()],
+					'30 Hari terakhir': [moment().subtract(29, 'days'), moment()],
+					'Bulan ini': [moment().startOf('month'), moment().endOf('month')],
+					'Bulan kemarin': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 				  },
 				  opens: 'right',
 				  buttonClasses: ['btn btn-default'],

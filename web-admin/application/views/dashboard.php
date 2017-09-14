@@ -48,6 +48,45 @@
                     }
                   }
               }
+
+              if ( $historyMonthly->return)
+              {
+                  $mingguSatu = 0;
+                  $mingguDua = 0;
+                  $mingguTiga = 0;
+                  $mingguEmpat = 0;
+
+                  // 7 , 14 , 21 , 28-31
+                  foreach ($historyMonthly->data as $row) {
+                      // 2017-12-12 (week 2)
+                      // 2017-12-1 (week 1)
+                      // 2017-12-25 (week 3)
+                      // 2017-12-5 (week 1)
+                      // 2017-09-11 (week 2)
+                      $tanggal_waktu = date('Y-m-d', strtotime($row->tanggal_waktu));
+
+                      if ( $tanggal_waktu >= date('Y-m-01') AND $tanggal_waktu <= date('Y-m-07'))
+                      {
+                          // $weekly = 'satu';
+                          $mingguSatu += 1;
+                      }
+                      elseif( $tanggal_waktu >= date('Y-m-08') AND $tanggal_waktu <= date('Y-m-14'))
+                      {
+                          // $weekly = 'dua';
+                          $mingguDua += 1;
+                      }
+                      elseif( $tanggal_waktu >= date('Y-m-15') AND $tanggal_waktu <= date('Y-m-21'))
+                      {
+                          // $weekly = 'tiga';
+                          $mingguTiga += 1;
+                      }
+                      elseif( $tanggal_waktu >= date('Y-m-22') AND $tanggal_waktu <= date('Y-m-31'))
+                      {
+                          // $weekly = 'empat';
+                          $mingguEmpat += 1;
+                      }
+                  }
+              }
               ?>
               <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="tile-stats">
@@ -87,21 +126,20 @@
               <div class="col-md-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Transaksi Summary <small>Progress Mingguan</small></h2>
-                    <div class="filter">
-                      <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                        <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
-                      </div>
-                    </div>
+                    <h2>Transaksi Summary (<?= $historyMonthly ? count($historyMonthly->data) : 0?>)<small>Progress Mingguan <strong>September</strong></small></h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
                     <div class="col-md-9 col-sm-12 col-xs-12">
                       <div class="demo-container" style="height:280px">
-                        <div id="chart_plot_01" class="demo-placeholder"></div>
+                        <div id="placeholder" class="demo-placeholder"></div>
                       </div>
-
+                      <form id="weekLabel">
+                      <div>Minggu ke-1 sekitar: <span><?= $mingguSatu ?></span> transaksi</div><br/>
+                      <div>Minggu ke-2 sekitar: <span><?= $mingguDua ?></span> transaksi</div><br/>
+                      <div>Minggu ke-3 sekitar: <span><?= $mingguTiga ?></span> transaksi</div><br/>
+                      <div>Minggu ke-4 sekitar: <span><?= $mingguEmpat ?></span> transaksi</div><br/>
+                      </form>
                     </div>
 
                     <div class="col-md-3 col-sm-12 col-xs-12">

@@ -473,6 +473,69 @@ class Resources extends REST_Controller {
 															'invoice' => $x[1]
 														));
 												break;
+
+												case 'custom':
+													$startEnd = explode('|', $x[1]);
+													 // custom
+													// SELECT * FROM table WHERE timestamp BETWEEN '2012-05-05 00:00:00' AND '2012-05	-05 23:59:59'
+
+													if ( strpos($x[1], '|') === true)
+													{
+														$sql = "SELECT * FROM transfer_pulsa WHERE tanggal_waktu BETWEEN '".date('Y-m-d 00:00:00' , $startEnd[0])."' AND '".date('Y-m-d 23:59:59' , $startEnd[1])."'";
+													}
+													else
+													{
+														// query sengaja di null-kan karena parameter $x[1] tidak sesuai!
+														$sql = "SELECT * FROM transfer_pulsa WHERE tanggal_waktu >= 'NULLABLE!'";
+													}
+
+													$query = $this->db->query($sql);
+												break;
+
+												case 'datetime':
+													switch ($x[1]) {
+														case 'today':
+															// SELECT * FROM transfer_pulsa WHERE DATE(tanggal_waktu) = CURDATE()
+															$sql = "SELECT * FROM transfer_pulsa WHERE DATE(tanggal_waktu) = CURDATE()";
+															$query = $this->db->query($sql);
+														break;
+
+														case 'yesterday':
+															// SELECT * FROM transfer_pulsa WHERE DATE(tanggal_waktu) = CURDATE() - 1
+															$sql = "SELECT * FROM transfer_pulsa WHERE DATE(tanggal_waktu) = CURDATE() - 1";
+															$query = $this->db->query($sql);
+														break;
+
+														case 'last7':
+															// SELECT * FROM transfer_pulsa WHERE tanggal_waktu BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW()
+															$sql = "SELECT * FROM transfer_pulsa WHERE tanggal_waktu BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW()";
+															$query = $this->db->query($sql);
+														break;
+
+														case 'last30':
+															// SELECT * FROM transfer_pulsa WHERE tanggal_waktu BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+															$sql = "SELECT * FROM transfer_pulsa WHERE tanggal_waktu BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()";
+															$query = $this->db->query($sql);
+														break;
+
+														case 'monthly':
+															// select * from transfer_pulsa WHERE tanggaL_waktu >= '2017-09-01' AND tanggal_waktu < '2017-10-01'
+															$sql = "SELECT * FROM transfer_pulsa WHERE tanggal_waktu >= '".date('Y-m-1')."' AND tanggal_waktu < '".date('Y-m-1',strtotime('+ 1 month'))."'";
+															$query = $this->db->query($sql);
+														break;
+
+														case 'lastmonth':
+															// SELECT * FROM table
+															// WHERE YEAR(date_created) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH)
+															// AND MONTH(date_created) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)
+															$sql = "SELECT * FROM transfer_pulsa";
+															$sql.= " WHERE YEAR(tanggal_waktu) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH)";
+															$sql.= " AND MONTH(tanggal_waktu) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)";
+
+															$query = $this->db->query($sql);
+														break;
+													}
+												break;
 											}
 										}
 										else
@@ -491,7 +554,7 @@ class Resources extends REST_Controller {
 													'data' : 'message'
 												: 'error_message' =>
 												$query ? $num > 0 ? 
-													$query->result() : 'Data masih kosong!' 
+													$query->result() : 'Data masih kosong!'
 												: $this->msgMethodNotAllowed
 											);
 									break;

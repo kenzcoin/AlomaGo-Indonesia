@@ -39,7 +39,8 @@ class Admin extends CI_Controller {
 		$data['dataFeedback'] = $this->EndpointInterface->getFeedback($this->authToken);
 		$data['transferPulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken);
 		$data['dataUser'] = $this->EndpointInterface->getUser($this->authToken);
-		
+		$data['historyMonthly'] = $this->EndpointInterface->getTransferPulsa($this->authToken,'[datetime:monthly]');
+
 		self::isTemplate('dashboard' , $data);
 	}
 
@@ -144,9 +145,44 @@ class Admin extends CI_Controller {
 			/* Report */
 
 			case 'history':
+				$getdata = $this->input->get();
+				$listGet = array('custom','today','yesterday','last7','last30','monthly','lastmonth');
 				self::hasLogin();
 				$data['subTitle'] = "History";
-				$data['transfer_pulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken);
+				if ( isset($getdata['list']))
+				{
+					if ( ! in_array($getdata['list'], $listGet))
+					{
+						show_404();
+					}
+					else
+					{
+						if ( $getdata['list'] == 'custom')
+						{
+							$data['transfer_pulsa'] = true;	
+						}
+						else
+						{
+							$arrayList = array(
+								'today' => 'hari ini',
+								'yesterday' => 'kemarin',
+								'last7' => '7 hari terakhir',
+								'last30' => '30 hari terakhir',
+								'monthly' => 'bulan ini',
+								'lastmonth' => 'bulan terakhir'
+							);
+							
+							$data['list'] = $arrayList[trimLower($getdata['list'])];
+							$sort = "[datetime:".trimLower($getdata['list'])."]";
+							$data['transfer_pulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken, $sort);
+						}
+					}
+				}
+				else
+				{
+					$data['transfer_pulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken);
+				}
+
 				self::isTemplate('history' , $data);
 			break;
 
@@ -158,6 +194,23 @@ class Admin extends CI_Controller {
 					$this->EndpointInterface->getFeedback($this->authToken , trim($getdata['q']))
 					: $this->EndpointInterface->getFeedback($this->authToken);
 				self::isTemplate('feedback' , $data);
+			break;
+
+			case 'test':
+				// today
+				echo date('Y-m-d H:i:s' , strtotime("today")).'<BR>';
+				// yesterday
+				echo date('Y-m-d H:i:s' , strtotime("-1 day")).'<BR>';
+				// last7
+				echo date('Y-m-d H:i:s' , strtotime("-7 day")).'<BR>';
+				// last30
+				echo date('Y-m-d H:i:s' , strtotime("-30 day")).'<BR>';
+				// thismonth
+				echo date("Y-m-d H:i:s", strtotime("first day of this month")).'<BR>';
+				echo date("Y-m-d H:i:s", strtotime("last day of this month")).'<BR>';
+				// lastmonth
+				echo date("Y-m-d H:i:s", strtotime("first day of previous month")).'<BR>';
+				echo date("Y-m-d H:i:s", strtotime("last day of previous month")).'<BR>';
 			break;
 
 			/* Action */

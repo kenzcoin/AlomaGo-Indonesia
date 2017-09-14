@@ -171,7 +171,7 @@ class EndpointInterface extends CI_Model {
 
 		if ( $sort)
 		{
-			$this->uri .= $sort;
+			$this->uri .= '&sort='.$sort;
 		}
 
 		$endpoint = $this->curl->simple_get($this->uri);

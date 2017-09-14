@@ -48,6 +48,36 @@
     <script type="text/javascript" src="<?= resources_url(); ?>build/js/sweetalert.min.js"></script>
 
     <script type="text/javascript">
+      var data = [],
+          series = null;
+
+      $( "#weekLabel span" ).each(function( index ) {
+          var indexData = index++;
+          data[indexData] = {
+            label: "Minggu ke-" + index++,
+            data: $(this).text()
+          }
+      });
+
+      $.plot('#placeholder', data, {
+          series: {
+              pie: {
+                  show: true,
+                  radius: 1,
+                  label: {
+                      show: true,
+                      radius: 2/3,
+                      formatter: labelFormatter,
+                      threshold: 0.1
+                  }
+              }
+          }
+      });
+
+      function labelFormatter(label, series) {
+        return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "</div>";
+      }
+
         <?php if ( $this->uri->segment(2) == 'feedback'): ?>
         function doModal(a,b,x,y)
         {
@@ -82,6 +112,25 @@
         }
 
         <?php elseif( $this->uri->segment(2) == 'history'): ?>
+         $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+          /*console.log("xxx apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));*/
+          var tanggalMulai = picker.startDate.format('MMMM D, YYYY');
+          var tanggalSelesai = new Date(picker.endDate.format('MMMM D, YYYY'));
+          // var nextUri = '<?= admin_url(); ?>history?start='+ tanggalMulai.getTime() + '&end=' + tanggalSelesai.getTime() + ''
+          alert(tanggalMulai);
+          // window.location.href = nextUri;
+        });
+
+            $(".form_datetime").datetimepicker({
+        format: "dd MM yyyy - hh:ii"
+    });
+
+        function dateChange(value)
+        {
+            var nextUri = '<?= admin_url() ?>history?list=' + value;
+            window.location.href = nextUri;
+        }
+
         function doModal(inv, invDt, sender, to , status, nominal)
         {
           /* a = id , b = nama , x = pesan , y = tanggal_waktu */
