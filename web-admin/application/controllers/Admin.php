@@ -159,7 +159,7 @@ class Admin extends CI_Controller {
 					{
 						if ( $getdata['list'] == 'custom')
 						{
-							$data['transfer_pulsa'] = true;	
+							self::isTemplate('history_custom' , $data);
 						}
 						else
 						{
@@ -175,15 +175,15 @@ class Admin extends CI_Controller {
 							$data['list'] = $arrayList[trimLower($getdata['list'])];
 							$sort = "[datetime:".trimLower($getdata['list'])."]";
 							$data['transfer_pulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken, $sort);
+							self::isTemplate('history' , $data);
 						}
 					}
 				}
 				else
 				{
 					$data['transfer_pulsa'] = $this->EndpointInterface->getTransferPulsa($this->authToken);
+					self::isTemplate('history' , $data);
 				}
-
-				self::isTemplate('history' , $data);
 			break;
 
 			case 'feedback':

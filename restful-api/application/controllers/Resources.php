@@ -479,7 +479,7 @@ class Resources extends REST_Controller {
 													 // custom
 													// SELECT * FROM table WHERE timestamp BETWEEN '2012-05-05 00:00:00' AND '2012-05	-05 23:59:59'
 
-													if ( strpos($x[1], '|') === true)
+													if ( strpos($x[1], '|') == true)
 													{
 														$sql = "SELECT * FROM transfer_pulsa WHERE tanggal_waktu BETWEEN '".date('Y-m-d 00:00:00' , $startEnd[0])."' AND '".date('Y-m-d 23:59:59' , $startEnd[1])."'";
 													}
@@ -554,7 +554,7 @@ class Resources extends REST_Controller {
 													'data' : 'message'
 												: 'error_message' =>
 												$query ? $num > 0 ? 
-													$query->result() : 'Data masih kosong!'
+													$query->result() : 'Data masih kosong'
 												: $this->msgMethodNotAllowed
 											);
 									break;

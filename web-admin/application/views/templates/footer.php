@@ -127,7 +127,12 @@
 
         function dateChange(value)
         {
-            var nextUri = '<?= admin_url() ?>history?list=' + value;
+            var nextUri = '<?= admin_url() ?>history';
+            if ( value != "all")
+            {
+                nextUri += '?list=' + value;
+            }
+
             window.location.href = nextUri;
         }
 

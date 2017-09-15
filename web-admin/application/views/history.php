@@ -16,57 +16,35 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <?php if ( isset($transfer_pulsa) && ! @$transfer_pulsa->return): ?>
-                      <?php if ( $this->input->get('list') == 'custom'): ?>
-                          <div class="x_content">
-                            <form id="customRange" class="form-horizontal form-label-left">
-                              <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Tanggal Awal <span class="required">*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <div class="input-append date form_datetime">
-    <input size="16" type="text" value="" readonly>
-    <span class="add-on"><i class="icon-th"></i></span>
-</div>
-A
-                                </div>
-                              </div>
-
-                              <div class="ln_solid"></div>
-
-                              <div class="form-group">
-                                <button type="submit" id="saveBtn" class="btn btn-success">Simpan</button>
-                              </div>
-                          </form>
-                          </div>
-                      <?php else: ?>
                   <h4 class="text-center">Data History <strong><?= @$list ?></strong> masih kosong</h4>
                     <select name="History" class="form-control" onchange="dateChange(this.value)">
-                        <option>Semua History</option>
-                        <option value="today">Hari ini</option>
-                        <option value="yesterday">Kemarin</option>
-                        <option value="last7">7 Hari terakhir</option>
-                        <option value="last30">30 Hari terakhir</option>
-                        <option value="monthly">Bulan ini</option>
-                        <option value="lastmonth">Bulan terakhir</option>
-                        <!-- <option value="custom">Atur Manual</option> -->
-                    </select> 
-                      <?php endif; ?>
-                  <?php else: ?>
-                  <div class="filter col-md-3 pull-right">
-                    <!-- <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc"> -->
-                      <!-- <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                      <span></span> <b class="caret"></b> -->
-                      <!-- December 30, 2014 - January 28, 2015 -->
-                    <!-- </div> -->
-                    <select name="History" class="form-control" onchange="dateChange(this.value)">
-                          <option>Semua History</option>
+                          <option>-- Pilih Batas Waktu --</option>
+                          <option value="all">Semua History</option>
                           <option value="today">Hari ini</option>
                           <option value="yesterday">Kemarin</option>
                           <option value="last7">7 Hari terakhir</option>
                           <option value="last30">30 Hari terakhir</option>
                           <option value="monthly">Bulan ini</option>
                           <option value="lastmonth">Bulan terakhir</option>
-                          <!-- <option value="custom">Atur Manual</option> -->
+                          <option value="custom">Atur Manual</option>
+                      </select>
+                  <?php else: ?>
+                  <?php if ( $this->input->get('list')): ?>
+                  <div class="filter col-md-3 pull-left">
+                      <h5>Hasil pencarian <strong><?= $list; ?></strong></h5>
+                  </div>
+                  <?php endif; ?>
+                  <div class="filter col-md-3 pull-right">
+                    <select name="History" class="form-control" onchange="dateChange(this.value)">
+                          <option>-- Pilih Batas Waktu --</option>
+                          <option value="all">Semua History</option>
+                          <option value="today">Hari ini</option>
+                          <option value="yesterday">Kemarin</option>
+                          <option value="last7">7 Hari terakhir</option>
+                          <option value="last30">30 Hari terakhir</option>
+                          <option value="monthly">Bulan ini</option>
+                          <option value="lastmonth">Bulan terakhir</option>
+                          <option value="custom">Atur Manual</option>
                       </select>
                   </div>
                   <div class="clearfix"></div>
