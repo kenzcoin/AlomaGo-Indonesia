@@ -50,6 +50,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'homepage';
+$route['run-gammu/(:any)'] = 'run/$1';
+$route['run-gammu/sentMBA/(:any)/(:any)/(:any)/(:any)'] = 'run/sentMBA/$1/$2/$3/$4';
+$route['run-gammu/sampleMBA/(:any)/(:any)'] = 'run/sampleMBA/$1/$2';
+$route['run-gammu/checkPendingMBA'] = 'run/checkPendingMBA';
+$route['run-gammu/sp/(:any)/(:any)/(:any)/(:any)'] = 'run/sentPrivate/$1/$2/$3/$4';
+$route['run-gammu/getProvider/(:any)'] = 'run/getProvider/$1';
+$route['run-gammu/getCodePhoneNumber/(:any)'] = 'run/getCodePhoneNumber/$1';
 $route['(:any)'] = 'resources/$1';
+$route['(:any)/(:any)'] = 'resources/$1/$2';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
