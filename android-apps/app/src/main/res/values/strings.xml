@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">AlomaGo Indonesia</string>
+    <string name="transfer_pulsa">Transfer Pulsa</string>
+    <string name="nomor">Masukkan Nomor Tujuan</string>
+    <string name="denominasi">Pilih Denominasi</string>
+    <string name="totalpulsa">Total Pulsa yang akan di Transfer</string>
+    <string name="title_activity_main_tab">Aloma Go</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_onboarding">Onboarding</string>
+    <string name="slide1">Transfer Pulsa Antar Operator</string>
+    <string name="slide1_desc">Pilih denominasi yang mau kamu bagi, kami akan menambahkan jasa transfer pulsa kami dan transfer pulsa bisasegera kamu rasakan kemudahannya</string>
+    <string name="slide2">Konversi Pulsa ke Saldo Rekening</string>
+    <string name="slide2_desc">Pilih denominasi yang kamu konversi, masukkan rekening tujuan kamu, setelah ditambah jasa transfer kami, pulsa otomatis menjadi saldo rekening kamu </string>
+    <string name="slide3">Warung Pulsa Kamu</string>
+    <string name="slide3_desc">Kamu juga bisa mendaftar sebagai agen pulsa dan siap menambah penghasilan kamu dan membantu mencerahkan harimu</string>
+    <string name="slide4">Cerita Burung</string>
+    <string name="slide4_desc">Update berita di sekitar dengan kongkow di cerita burung sambil menikmati asiknya menikmati berita dalam format komik </string>
+    <string name="label_button_cta_canteen_intro" translatable="false">Lanjutkan</string>
+    <string name="title_activity_main_navigation">MainActivityNavigation</string>
+
+    <!-- Menu Setting-->
+    <string name="sigIn">Sign In/Registration</string>
+    <string name="history">History</string>
+    <string name="rate">Rate this App</string>
+    <string name="tellFriend">Tell a Friend</string>
+    <string name="feedback">Feedback</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="privacy">Privacy Policy</string>
+    <string name="about">About</string>
+
+    <!-- About this APP -->
+    <string name="title_about">About this APP</string>
+    <string name="desc_about">We are commited to providing first-class services to the writers who trust us with their books. If we are to fulfil our promises to readers, our job is to do everything in our power to help our writers write the best books they can. We care passionately about the quality of our editorial work. Design and production matter to us because we want our books to be beautiful objects. And since we want our beautiful books to be read on trains and beaches, in beds and planes, or under the desk at school and work, we work up a sweat to promote and market them. And that includes selling rights on behalf of our writers to publishers all around the world. In fact we earn more money for our writers through licensing international editions than we do by turning their books into bestsellers in Australia and New Zealand</string>
+
+    <!-- Disclaimer -->
+    <string name="desc_disclaimer1">Company X provides the [www address] Web site as a service to the public and Web site owners.</string>
+    <string name="desc_disclaimer2">Company X is not responsible for, and expressly disclaims all liability for, damages of any any kind arising out of use, reference to, or reliance on any information contained within the site. While the information contained within the site is periodically updated no guarantee is given that the information provided in this Web site is correct, complete, and up to-date.</string>
+    <string name="desc_disclaimer3">Although the Company X Web site may include links providing direct access to other Internet resources, including Web sites, Company X is not responsible for the accurancy or content of information contained in these sites.</string>
+    <string name="desc_disclaimer4">Links from Company X to third-party sites do not constitute an endorsement by Company X of the parties or their products and services. The apperance on the Web site of advertisements and product or service information does not constitude an endorsement by Company X, and Company X has not investigated the claims made by any advertiser. Product information is based solely on material received from suppliers.</string>
+
+    <!--Privacy Policy -->
+    <string name="desc_policy1">Welcome to the homepage of Privacy Policy Online generate your own Privacy Policy that fills all of the requirements of the leading PPC and Affiliate sites such as Google Adsense, Commission Junction and the most popular sites used for site monetization</string>
+    <string name="desc_policy2">Here you will find not only generator for quickly and easily generating a Privacy Policy for your sites, but you will find many other resource for complying with regulations and learning more about Privacy Policies</string>
+
+    <!-- Feedback -->
+    <string name="desc_feed">Berikan feedback anda pada aplikasi ini.</string>
+    <string name="comment">Komentar</string>
+    <string name="desc_comment">Tulis komentar di sini</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_main_tab_menu">MainActivityTabMenu</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Transfer Pulsa Antar Operator</string>
+    <string name="slide_1_desc">Pilih denominasi yang mau kamu bagi, kami akan menambahkan jasa transfer pulsa kami dan transfer pulsa bisa segera kamu rasakan kemudahannya</string>
+
+    <string name="slide_2_title">Konversi Pulsa ke Saldo Rekening</string>
+    <string name="slide_2_desc">Pilih denominasi yang mau kamu konversi, masukkan rekening tujuan kamu, setelah ditambah jasa transfer kami, pulsa otomatis menjadi saldo di rekening kamu</string>
+
+    <string name="slide_3_title">Warung Pulsa Kamu</string>
+    <string name="slide_3_desc">Kamu juga bisa mendaftar sebagai agen pulsa dan siap menambah penghasilan kamu dan membantu mencerahkan harimu</string>
+
+    <string name="slide_4_title">Cerita Burung</string>
+    <string name="slide_4_desc">Update berita di sekitar dengan kongkow di cerita burung sambil menikmati asiknya menikmati berita dalam format komik</string>
+
+    <string name="endpointUri">http://localhost:8080</string>
+</resources>

@@ -214,7 +214,6 @@ class Run extends CI_Controller {
 				$message = $totaltransfer."*".$nomor_tujuan;
 				$product_code = $this->getProductCode($totaltransfer, $provider);
 
-
 				$dataInsert['TextDecoded'] = $message;
 				$dataInsert['CreatorID'] = $getProvider;
 				$dataInsert['SenderId'] = $getProvider;
@@ -388,5 +387,5 @@ class Run extends CI_Controller {
 		phpinfo();
 	}
 	function updateStatusDeliver(){
-	}	
+	}
 }
